@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
 import Navbar from '../components/Navbar';
-import { ShoppingCart, ArrowRight } from 'lucide-react';
+import ProductCard from '../components/ProductCard';
+import { ArrowRight } from 'lucide-react';
 
 export default function Tienda() {
   const [productos, setProductos] = useState([]);
@@ -23,19 +24,13 @@ export default function Tienda() {
       if (neg) setNegocio(neg);
       if (cats) setCategorias(cats);
       if (prods) setProductos(prods);
-    } catch (e) { console.error(e); } 
+    } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
 
-  const productosFiltrados = categoriaActiva === 'Todas' 
-    ? productos 
+  const productosFiltrados = categoriaActiva === 'Todas'
+    ? productos
     : productos.filter(p => p.categorias?.nombre === categoriaActiva);
-
-  const pedirWsp = (prod) => {
-    if(!prod.activo) return;
-    const msg = `${negocio?.mensaje_pedidos || 'Hola:'} ${prod.nombre}`;
-    window.open(`https://wa.me/${negocio?.celular_whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
-  };
 
   if (loading) return <div className="h-screen flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div></div>;
 
@@ -45,8 +40,8 @@ export default function Tienda() {
 
       {/* 1. HERO SECTION (PANTALLA COMPLETA) */}
       <header className="relative w-full h-screen">
-        <img 
-          src="https://images.unsplash.com/photo-1496062031456-07b8f162a322?auto=format&fit=crop&q=80" 
+        <img
+          src="https://images.unsplash.com/photo-1496062031456-07b8f162a322?auto=format&fit=crop&q=80"
           className="absolute inset-0 w-full h-full object-cover brightness-50"
         />
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
@@ -66,21 +61,30 @@ export default function Tienda() {
       {/* 2. CATÁLOGO (ANCHO COMPLETO CON MAX-WIDTH) */}
       <section id="catalogo" className="py-20 bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 font-serif">Nuestros Arreglos</h2>
-            <div className="flex flex-wrap justify-center gap-4">
-              <button 
+            <h2 className="text-4xl font-bold text-gray-900 mb-3 font-serif">Nuestros Arreglos</h2>
+            <div className="w-24 h-1.5 bg-pink-600 mx-auto rounded-full mb-10"></div>
+
+            {/* Category Filters - Premium Design */}
+            <div className="flex flex-wrap justify-center gap-3">
+              <button
                 onClick={() => setCategoriaActiva('Todas')}
-                className={`px-6 py-2 rounded-full text-sm font-bold transition ${categoriaActiva === 'Todas' ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 hover:text-pink-600'}`}
+                className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 ${categoriaActiva === 'Todas'
+                    ? 'bg-pink-600 text-white shadow-lg shadow-pink-200 transform scale-105'
+                    : 'bg-white text-gray-600 border border-gray-200 hover:border-pink-600 hover:text-pink-600 shadow-sm'
+                  }`}
               >
                 Todas
               </button>
               {categorias.map(cat => (
-                <button 
+                <button
                   key={cat.id}
                   onClick={() => setCategoriaActiva(cat.nombre)}
-                  className={`px-6 py-2 rounded-full text-sm font-bold transition ${categoriaActiva === cat.nombre ? 'bg-pink-600 text-white shadow-lg' : 'bg-white text-gray-500 hover:text-pink-600'}`}
+                  className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 ${categoriaActiva === cat.nombre
+                      ? 'bg-pink-600 text-white shadow-lg shadow-pink-200 transform scale-105'
+                      : 'bg-white text-gray-600 border border-gray-200 hover:border-pink-600 hover:text-pink-600 shadow-sm'
+                    }`}
                 >
                   {cat.nombre}
                 </button>
@@ -90,40 +94,10 @@ export default function Tienda() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {productosFiltrados.map((prod) => (
-              <div key={prod.id} className="group bg-white rounded-none md:rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300">
-                <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
-                  <img 
-                    src={prod.imagen_url || 'https://via.placeholder.com/400'} 
-                    alt={prod.nombre} 
-                    className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${!prod.activo && 'grayscale'}`}
-                  />
-                  {!prod.activo && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                      <span className="text-white font-bold border-2 border-white px-4 py-2 uppercase tracking-widest">Agotado</span>
-                    </div>
-                  )}
-                  {prod.activo && (
-                    <button 
-                      onClick={() => pedirWsp(prod)}
-                      className="absolute bottom-4 left-4 right-4 bg-white text-gray-900 py-3 font-bold uppercase text-xs tracking-wider translate-y-full group-hover:translate-y-0 transition-transform duration-300 shadow-lg flex justify-center gap-2 items-center hover:bg-green-500 hover:text-white"
-                    >
-                      Pedir por WhatsApp
-                    </button>
-                  )}
-                </div>
-                <div className="p-6">
-                  <p className="text-xs text-pink-500 font-bold uppercase mb-1">{prod.categorias?.nombre}</p>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 truncate">{prod.nombre}</h3>
-                  <div className="flex justify-between items-end">
-                    <p className={`text-xl font-serif ${!prod.activo ? 'line-through text-gray-300' : 'text-gray-900'}`}>
-                      S/. {prod.precio}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <ProductCard key={prod.id} product={prod} negocio={negocio} />
             ))}
           </div>
-          
+
           {productosFiltrados.length === 0 && (
             <div className="text-center py-20 text-gray-400">No hay productos en esta categoría.</div>
           )}
