@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import { supabase } from '../supabase';
+import { useCart } from '../context/CartContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [tiendaNombre, setTiendaNombre] = useState('Mi Florería');
+  const { cartCount, openCart } = useCart();
   const location = useLocation();
 
   // Efecto para cambiar color al hacer scroll
@@ -33,7 +35,7 @@ export default function Navbar() {
     <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          
+
           {/* LOGO */}
           <Link to="/" className="flex items-center gap-2">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl transition-colors ${scrolled ? 'bg-pink-600 text-white' : 'bg-white text-pink-600'}`}>
@@ -47,18 +49,42 @@ export default function Navbar() {
           {/* DESKTOP MENU */}
           <div className="hidden md:flex space-x-8 items-center">
             {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
-                to={link.path} 
+              <Link
+                key={link.name}
+                to={link.path}
                 className={`font-medium transition hover:text-pink-500 ${scrolled ? 'text-gray-700' : 'text-white drop-shadow-sm'}`}
               >
                 {link.name}
               </Link>
             ))}
+
+            {/* CART ICON */}
+            <button
+              onClick={openCart}
+              className={`relative p-2 rounded-full transition hover:text-pink-500 ${scrolled ? 'text-gray-900' : 'text-white drop-shadow-sm'}`}
+            >
+              <ShoppingCart size={24} />
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 bg-pink-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce">
+                  {cartCount}
+                </span>
+              )}
+            </button>
           </div>
 
           {/* MOBILE MENU BUTTON */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-4">
+            <button
+              onClick={openCart}
+              className={`relative ${scrolled ? 'text-gray-900' : 'text-white'}`}
+            >
+              <ShoppingCart size={24} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce">
+                  {cartCount}
+                </span>
+              )}
+            </button>
             <button onClick={() => setIsOpen(!isOpen)} className={scrolled ? 'text-gray-900' : 'text-white'}>
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -71,7 +97,7 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-t absolute w-full shadow-xl">
           <div className="px-4 pt-2 pb-6 space-y-1">
             {navLinks.map((link) => (
-              <Link 
+              <Link
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
