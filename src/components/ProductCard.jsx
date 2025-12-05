@@ -15,9 +15,9 @@ export default function ProductCard({ product, negocio }) {
             <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
 
                 {/* Category Badge (Floating) */}
-                <div className="absolute top-5 left-5 z-10">
-                    <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5">
-                        <Flower size={14} className="text-pink-600" />
+                <div className="absolute top-3 left-3 md:top-5 md:left-5 z-10">
+                    <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-[10px] md:text-xs font-bold px-2 py-1 md:px-4 md:py-2 rounded-full shadow-sm flex items-center gap-1 md:gap-1.5">
+                        <Flower size={10} className="text-pink-600 md:w-3.5 md:h-3.5" />
                         {product.categorias?.nombre}
                     </span>
                 </div>
@@ -42,38 +42,38 @@ export default function ProductCard({ product, negocio }) {
             </div>
 
             {/* Content Section */}
-            <div className="p-5 pt-4 flex flex-col flex-grow">
+            <div className="p-3 md:p-5 pt-3 md:pt-4 flex flex-col flex-grow">
 
                 {/* Title & Description */}
                 <div className="mb-2">
-                    <h3 className="text-xl font-bold text-gray-900 mb-1 leading-tight">
+                    <h3 className="text-sm md:text-xl font-bold text-gray-900 mb-1 leading-tight">
                         {product.nombre}
                     </h3>
-                    <p className="text-sm text-gray-400 line-clamp-2 font-light leading-relaxed">
+                    <p className="text-[10px] md:text-sm text-gray-400 line-clamp-2 font-light leading-relaxed">
                         {product.descripcion}
                     </p>
                 </div>
 
                 {/* Status Indicator */}
-                <div className="mb-4">
+                <div className="mb-3 md:mb-4">
                     {product.activo ? (
                         <div className="flex items-center gap-1.5 text-green-600">
-                            <Leaf size={16} />
-                            <span className="text-sm font-medium">Disponible</span>
+                            <Leaf size={14} className="md:w-4 md:h-4" />
+                            <span className="text-[10px] md:text-sm font-medium">Disponible</span>
                         </div>
                     ) : (
                         <div className="flex items-center gap-1.5 text-red-500">
                             <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                            <span className="text-sm font-medium">No disponible</span>
+                            <span className="text-[10px] md:text-sm font-medium">No disponible</span>
                         </div>
                     )}
                 </div>
 
                 {/* Price & Action */}
-                <div className="mt-auto flex items-center justify-between">
+                <div className="mt-auto flex items-center justify-between gap-2">
                     <div className="flex flex-col">
-                        <span className="text-xs text-gray-400 font-medium mb-0.5">Precio</span>
-                        <span className="text-2xl font-bold text-gray-900">
+                        <span className="text-[10px] md:text-xs text-gray-400 font-medium mb-0.5">Precio</span>
+                        <span className="text-base md:text-2xl font-bold text-gray-900">
                             S/. {product.precio}
                         </span>
                     </div>
@@ -81,10 +81,10 @@ export default function ProductCard({ product, negocio }) {
                     {product.activo && (
                         <button
                             onClick={handleAddToCart}
-                            className="bg-pink-600 text-white p-3.5 rounded-full hover:bg-pink-700 transition-colors shadow-lg hover:shadow-pink-200 group"
+                            className="bg-pink-600 text-white p-2 md:p-3.5 rounded-full hover:bg-pink-700 transition-colors shadow-lg hover:shadow-pink-200 group flex-shrink-0"
                             title="Añadir al carrito"
                         >
-                            <ShoppingCart size={22} className="group-hover:scale-110 transition-transform" />
+                            <ShoppingCart size={18} className="md:w-[22px] md:h-[22px] group-hover:scale-110 transition-transform" />
                         </button>
                     )}
                 </div>
