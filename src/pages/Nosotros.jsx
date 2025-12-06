@@ -1,4 +1,5 @@
-import Navbar from '../components/Navbar'; // Reusamos el Navbar
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function Nosotros() {
   return (
@@ -17,7 +18,7 @@ export default function Nosotros() {
       </div>
 
       {/* CONTENIDO */}
-      <section className="max-w-4xl mx-auto py-20 px-6">
+      <section className="max-w-6xl mx-auto py-20 px-6">
         <div className="prose prose-lg mx-auto text-gray-600">
           <h2 className="text-3xl font-bold text-pink-600 mb-6 text-center">Pasión por los detalles</h2>
           <p className="mb-6 leading-relaxed text-lg">
@@ -41,10 +42,7 @@ export default function Nosotros() {
         </div>
       </section>
 
-      {/* FOOTER SIMPLE */}
-      <footer className="bg-gray-100 py-8 text-center text-gray-500 text-sm">
-        © 2024 Petalos Dorados. Hecho con amor.
-      </footer>
+      <Footer />
     </div>
   );
 }
