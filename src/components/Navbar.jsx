@@ -35,22 +35,19 @@ export default function Navbar() {
   return (
     <>
       {/* TOP BAR */}
-      <div className="bg-[#BE185D] text-white py-3 hidden md:block relative z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center text-xs font-medium">
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-2">
-              <Phone size={14} className="text-pink-200" />
+      <div className="hidden md:block bg-[#BE185D] text-white py-2 md:py-3 relative z-50 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-xs font-medium gap-2 md:gap-0">
+          <div className="flex items-center gap-4 md:gap-6 overflow-x-auto w-full md:w-auto justify-center md:justify-start pb-1 md:pb-0 scrollbar-hide">
+            <span className="flex items-center gap-1.5 whitespace-nowrap">
+              <Phone size={13} className="text-pink-200" />
               {negocio?.telefono || '+52 55 1234 5678'}
             </span>
-            <span className="flex items-center gap-2">
-              <MapPin size={14} className="text-pink-200" />
+            <span className="flex items-center gap-1.5 whitespace-nowrap">
+              <MapPin size={13} className="text-pink-200" />
               {negocio?.direccion || 'Túcume'}
             </span>
-            <a href={`mailto:${negocio?.email || 'contacto@petalosdorados.com'}`} className="flex items-center gap-2 hover:text-pink-200 transition-colors" title="Enviar correo">
-              <Mail size={14} className="text-pink-200" />
-            </a>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <span className="text-pink-200">Síguenos:</span>
             <div className="flex items-center gap-3">
               {negocio?.enlace_facebook && (
@@ -72,15 +69,26 @@ export default function Navbar() {
       <nav className={`sticky top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? 'bg-white/95 shadow-md py-2 backdrop-blur-md' : 'bg-white py-4 shadow-sm'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
 
-          {/* LOGO */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-full bg-[#BE185D] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300">
-              <Flower size={20} />
-            </div>
-            <span className="font-bold text-xl text-gray-800 tracking-tight hidden sm:block group-hover:text-[#BE185D] transition-colors">
-              {negocio?.nombre_tienda || 'Pétalos de Oro'}
-            </span>
-          </Link>
+          {/* LOGO & MENU BUTTON GROUP */}
+          <div className="flex items-center gap-4">
+            {/* MOBILE MENU BUTTON - MOVED TO LEFT */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+            >
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+
+            {/* LOGO */}
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <div className="w-10 h-10 rounded-full bg-[#BE185D] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300">
+                <Flower size={20} />
+              </div>
+              <span className="font-bold text-xl text-gray-800 tracking-tight hidden sm:block group-hover:text-[#BE185D] transition-colors">
+                {negocio?.nombre_tienda || 'Pétalos de Oro'}
+              </span>
+            </Link>
+          </div>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-8">
@@ -110,35 +118,67 @@ export default function Navbar() {
                 </span>
               )}
             </button>
-
-            {/* MOBILE MENU BUTTON */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
           </div>
         </div>
       </nav>
 
-      {/* MOBILE MENU DROPDOWN */}
-      {isOpen && (
-        <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-xl pt-32 px-6 md:hidden animate-fade-in">
-          <div className="flex flex-col gap-4 text-center">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className="text-xl font-bold text-gray-800 py-4 border-b border-gray-100 hover:text-pink-600 transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+      {/* MOBILE MENU DRAWER */}
+      {/* Overlay */}
+      <div
+        className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 md:hidden ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setIsOpen(false)}
+      />
+
+      {/* Drawer */}
+      <div className={`fixed top-0 left-0 z-[70] w-64 h-full bg-white shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-4 flex justify-end">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+          >
+            <X size={24} />
+          </button>
+        </div>
+        <div className="flex flex-col gap-2 px-6 pt-4">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              onClick={() => setIsOpen(false)}
+              className="text-lg font-bold text-gray-800 py-3 border-b border-gray-100 hover:text-pink-600 hover:pl-2 transition-all"
+            >
+              {link.name}
+            </Link>
+          ))}
+
+          {/* Mobile Social Links (Moved from Top Bar) */}
+          <div className="mt-8 pt-6 border-t border-gray-100">
+            <p className="text-sm font-bold text-gray-500 mb-4">Síguenos:</p>
+            <div className="flex items-center gap-4">
+              {negocio?.enlace_facebook && (
+                <a
+                  href={negocio.enlace_facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors"
+                >
+                  <Facebook size={20} />
+                </a>
+              )}
+              {negocio?.enlace_instagram && (
+                <a
+                  href={negocio.enlace_instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center hover:bg-pink-100 transition-colors"
+                >
+                  <Instagram size={20} />
+                </a>
+              )}
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }
