@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
 import RevealOnScroll from '../components/RevealOnScroll';
 import Footer from '../components/Footer';
-import { ArrowRight, Sparkles, Flower2, ChevronLeft, ChevronRight, Clock, Heart } from 'lucide-react';
+import { Gift, Sparkles, Flower2, ChevronLeft, ChevronRight, Clock, Heart, ArrowRight } from 'lucide-react';
 
 const DEFAULT_CATEGORY_IMAGE = 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80';
 
@@ -13,6 +13,21 @@ export default function Tienda() {
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Hero Carousel State
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const heroImages = [
+    "https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&q=80"
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000); // Slower interval (5s) for better UX
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     cargarDatos();
@@ -48,7 +63,6 @@ export default function Tienda() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Duplicate categories to create infinite scroll effect
   // Duplicate categories to create infinite scroll effect
   const extendedCategorias = [...categorias, ...categorias, ...categorias, ...categorias];
 
@@ -137,7 +151,7 @@ export default function Tienda() {
       <Navbar />
 
       {/* 1. HERO SECTION */}
-      <header className="relative w-full lg:min-h-screen bg-gray-50 flex lg:items-center pt-1 md:pt-6 lg:pt-10 pb-12 md:pb-16 lg:pb-20 overflow-hidden">
+      <header className="relative w-full lg:min-h-screen bg-gray-50 flex lg:items-center pt-8 md:pt-6 lg:pt-10 pb-12 md:pb-16 lg:pb-20 overflow-hidden">
         <div className="absolute top-1/2 right-0 w-2/3 h-full bg-gradient-to-l from-pink-50/50 to-transparent pointer-events-none" />
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-pink-100/30 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center relative z-10">
@@ -147,56 +161,72 @@ export default function Tienda() {
                 <Sparkles size={16} className="text-pink-700" />
                 Entrega el mismo día
               </div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-sans text-gray-900 leading-tight mb-6 md:mb-8 relative z-10">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-sans text-gray-900 leading-tight mb-4 md:mb-6 relative z-10 drop-shadow-md">
                 Flores que <span className="text-pink-500">acompañan</span>
               </h1>
-              <p className="text-lg text-gray-500 mb-8 md:mb-10 max-w-lg mx-auto md:mx-0 leading-relaxed font-medium relative z-10">
-                Creamos arreglos florales que llenan tus momentos especiales de color, frescura y emociones reales.
+              <p className="block md:hidden text-lg text-gray-600 mb-6 font-medium relative z-10">
+                Transformamos emociones en flores.
               </p>
-              {/* Features Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 mb-8 relative z-10 w-full max-w-lg">
-                <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-2 p-1 sm:p-3 rounded-xl hover:bg-white/50 transition-colors">
-                  <div className="p-2 bg-pink-100/50 rounded-lg text-pink-600">
-                    <Clock size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-xs sm:text-sm leading-tight">Entrega Rápida</h4>
-                    <p className="text-[10px] sm:text-xs text-gray-500 leading-tight">Mismo día disponible</p>
-                  </div>
-                </div>
-                <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-2 p-1 sm:p-3 rounded-xl hover:bg-white/50 transition-colors">
-                  <div className="p-2 bg-pink-100/50 rounded-lg text-pink-600">
-                    <Sparkles size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-xs sm:text-sm leading-tight">100% Frescas</h4>
-                    <p className="text-[10px] sm:text-xs text-gray-500 leading-tight">Garantía de calidad</p>
-                  </div>
-                </div>
-                <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-2 p-1 sm:p-3 rounded-xl hover:bg-white/50 transition-colors col-span-2 sm:col-span-1 w-1/2 sm:w-auto mx-auto sm:mx-0">
-                  <div className="p-2 bg-pink-100/50 rounded-lg text-pink-600">
-                    <Heart size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-xs sm:text-sm leading-tight">Hecho con Amor</h4>
-                    <p className="text-[10px] sm:text-xs text-gray-500 leading-tight">Arreglos únicos</p>
+              <p className="hidden md:block text-lg text-gray-500 mb-3 md:mb-5 max-w-lg mx-auto md:mx-0 leading-relaxed font-medium relative z-10">
+                Cada uno de nuestros arreglos está pensado para acompañar tus momentos especiales con elegancia y frescura.
+              </p>
+
+              {/* Mobile Only Hero Image Carousel */}
+              <div className="block md:hidden relative z-10 mb-8 flex flex-col items-center">
+                <div className="relative rounded-[1.5rem] overflow-hidden shadow-lg border-4 border-white transform -rotate-2 w-64 h-64 bg-gray-100">
+                  {heroImages.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Hero ${index + 1}`}
+                      className={`absolute inset-0 w-full h-full object-cover rounded-[1.2rem] transition-opacity duration-[1500ms] ease-in-out ${currentHeroSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                    />
+                  ))}
+                  {/* Mobile Slider Indicators - Inside Image */}
+                  <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
+                    {heroImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentHeroSlide(index)}
+                        className={`w-1.5 h-1.5 rounded-full transition-all shadow-sm ${currentHeroSlide === index ? 'bg-white w-3' : 'bg-white/60'}`}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 relative z-10">
-                <a href="#destacados" className="w-full sm:w-auto bg-pink-600 text-white px-10 py-4 rounded-full font-bold shadow-lg shadow-pink-200 hover:shadow-xl hover:bg-pink-700 hover:scale-105 transition-all flex items-center justify-center gap-2 group">
+                <a href="#destacados" className="w-full sm:w-auto bg-pink-600 text-white px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all flex items-center justify-center gap-2 group">
                   Ver productos
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  <Gift size={20} className="group-hover:rotate-12 transition-transform" />
                 </a>
               </div>
             </RevealOnScroll>
           </div>
+
           <div className="relative hidden md:block">
             <RevealOnScroll delay={300}>
-              <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(236,72,153,0.7)] border-8 border-white transform rotate-2 hover:rotate-0 transition-transform duration-700">
-                <img src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80" alt="Ramo de flores" className="w-full md:h-[450px] lg:h-[600px] object-cover" />
+              <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(236,72,153,0.7)] border-8 border-white transform rotate-2 hover:rotate-0 transition-transform duration-700 w-full md:h-[450px] lg:h-[600px] bg-gray-100">
+                {heroImages.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`Hero ${index + 1}`}
+                    className={`absolute inset-0 w-full h-full object-cover rounded-[2rem] transition-opacity duration-[1500ms] ease-in-out ${currentHeroSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                  />
+                ))}
+                {/* Desktop Slider Indicators */}
+                <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
+                  {heroImages.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentHeroSlide(index)}
+                      className={`w-2.5 h-2.5 rounded-full transition-all backdrop-blur-sm shadow-sm ${currentHeroSlide === index ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'}`}
+                    />
+                  ))}
+                </div>
               </div>
+              {/* Restored Secondary Floating Image */}
               <div className="absolute -bottom-12 -left-12 w-64 h-48 rounded-2xl overflow-hidden shadow-xl border-4 border-white z-20 animate-float">
                 <img src="https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&q=80" alt="Detalle flores" className="w-full h-full object-cover" />
               </div>
@@ -214,7 +244,6 @@ export default function Tienda() {
               <div className="w-24 h-1.5 bg-pink-600 mx-auto rounded-full mt-6"></div>
             </RevealOnScroll>
           </div>
-          {/* Carousel Container */}
           {/* Carousel Container */}
           <div
             className="relative group"
@@ -327,6 +356,57 @@ export default function Tienda() {
               </button>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* 3.5 FEATURES SECTION (New Location) */}
+      <section className="py-12 bg-gray-50 border-t border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <RevealOnScroll variant="up">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Feature 1 */}
+              <div className="relative group p-8 rounded-3xl bg-white shadow-[0_10px_30px_-10px_rgba(190,24,93,0.1)] hover:shadow-[0_20px_40px_-10px_rgba(190,24,93,0.2)] hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-50 to-transparent rounded-bl-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="flex flex-col items-center text-center gap-4">
+                  <div className="p-4 bg-pink-50 rounded-2xl text-pink-600 group-hover:rotate-6 transition-transform duration-300">
+                    <Clock size={32} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-xl mb-2">Entrega Rápida</h3>
+                    <p className="text-gray-500 leading-relaxed">Servicio de entrega el mismo día disponible.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="relative group p-8 rounded-3xl bg-white shadow-[0_10px_30px_-10px_rgba(190,24,93,0.1)] hover:shadow-[0_20px_40px_-10px_rgba(190,24,93,0.2)] hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-50 to-transparent rounded-bl-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="flex flex-col items-center text-center gap-4">
+                  <div className="p-4 bg-pink-50 rounded-2xl text-pink-600 group-hover:rotate-6 transition-transform duration-300">
+                    <Sparkles size={32} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-xl mb-2">100% Frescas</h3>
+                    <p className="text-gray-500 leading-relaxed">Garantizamos la frescura de cada flor.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="relative group p-8 rounded-3xl bg-white shadow-[0_10px_30px_-10px_rgba(190,24,93,0.1)] hover:shadow-[0_20px_40px_-10px_rgba(190,24,93,0.2)] hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-50 to-transparent rounded-bl-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="flex flex-col items-center text-center gap-4">
+                  <div className="p-4 bg-pink-50 rounded-2xl text-pink-600 group-hover:rotate-6 transition-transform duration-300">
+                    <Heart size={32} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-xl mb-2">Hecho con Amor</h3>
+                    <p className="text-gray-500 leading-relaxed">Cada arreglo es diseñado con dedicación.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
 
