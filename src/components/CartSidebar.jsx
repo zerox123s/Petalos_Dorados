@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, Loader2, MessageSquare } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../supabase'; // 1. Importar Supabase
@@ -8,8 +8,20 @@ export default function CartSidebar() {
     const { isCartOpen, closeCart, cartItems, removeFromCart, addToCart, decreaseQuantity, clearCart } = useCart();
     const [isLoading, setIsLoading] = useState(false); // 2. Estado de carga
 
+    // Lock body scroll when cart is open
+    useEffect(() => {
+        if (isCartOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isCartOpen]);
+
     const total = cartItems.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
-    
+
     // 3. Lógica del Checkout
     const handleCheckout = async () => {
         setIsLoading(true);
@@ -25,17 +37,17 @@ export default function CartSidebar() {
             const { celular_whatsapp, mensaje_pedidos } = negocioData;
 
             // Construir el mensaje del pedido
-            let itemsText = cartItems.map(item => 
+            let itemsText = cartItems.map(item =>
                 `- ${item.nombre} (x${item.quantity}) - S/. ${(item.precio * item.quantity).toFixed(2)}`
             ).join('\n');
-            
+
             const fullMessage = `${mensaje_pedidos || 'Hola, quisiera hacer el siguiente pedido:'}\n\n*Mi Pedido:*\n${itemsText}\n\n*Total: S/. ${total.toFixed(2)}*`;
-            
+
             const whatsappUrl = `https://wa.me/${celular_whatsapp}?text=${encodeURIComponent(fullMessage)}`;
-            
+
             toast.dismiss(loadingToast);
             toast.success('Redirigiendo a WhatsApp...');
-            
+
             // Redireccionar
             window.open(whatsappUrl, '_blank');
 
@@ -57,7 +69,7 @@ export default function CartSidebar() {
         <div className="fixed inset-0 z-[60] overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
             <div className="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={closeCart} />
             <div className="absolute inset-y-0 right-0 max-w-full flex">
-                <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col h-full animate-slide-in-right">
+                <div className="w-[90vw] max-w-md bg-white shadow-2xl flex flex-col h-full animate-slide-in-right">
                     <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                         <div className="flex items-center gap-3"><ShoppingBag className="text-pink-600" /><h2 className="text-lg font-bold text-gray-800">Tu Carrito</h2></div>
                         <button onClick={closeCart} className="p-2 rounded-full text-gray-500 hover:bg-gray-100"><X size={20} /></button>
