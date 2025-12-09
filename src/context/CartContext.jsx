@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(cartItems));
     }, [cartItems]);
 
-    const addToCart = (product) => {
+    const addToCart = (product, quantity = 1) => {
         // Check existence based on current state, NOT inside the setter
         const existingItem = cartItems.find((item) => item.id === product.id);
 
@@ -44,13 +44,13 @@ export const CartProvider = ({ children }) => {
         // We'll make it slightly larger by default as requested.
 
         if (existingItem) {
-            toast.success(`Se agregó otra unidad de ${product.nombre}`, {
+            toast.success(`Se agregaron ${quantity} unidades de ${product.nombre}`, {
                 style: { ...toastStyle, fontWeight: 'bold' },
                 className: 'md:text-lg md:px-6 md:py-4', // Tailwind classes for desktop
             });
             setCartItems((prevItems) =>
                 prevItems.map((item) =>
-                    item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                    item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
                 )
             );
         } else {
@@ -58,7 +58,7 @@ export const CartProvider = ({ children }) => {
                 style: { ...toastStyle, fontWeight: 'bold' },
                 className: 'md:text-lg md:px-6 md:py-4', // Tailwind classes for desktop
             });
-            setCartItems((prevItems) => [...prevItems, { ...product, quantity: 1 }]);
+            setCartItems((prevItems) => [...prevItems, { ...product, quantity }]);
         }
     };
 

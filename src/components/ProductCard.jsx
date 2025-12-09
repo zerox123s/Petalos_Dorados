@@ -1,16 +1,20 @@
 import { ShoppingCart, Flower, Leaf } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
-export default function ProductCard({ product, negocio }) {
+export default function ProductCard({ product, negocio, onClick }) {
     const { addToCart } = useCart();
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (e) => {
+        e.stopPropagation();
         if (!product.activo) return;
         addToCart(product);
     };
 
     return (
-        <div className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group transform hover:-translate-y-1">
+        <div
+            onClick={onClick}
+            className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group transform hover:-translate-y-1 cursor-pointer"
+        >
             {/* Image Section */}
             <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
 

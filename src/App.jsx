@@ -12,7 +12,7 @@ function App() {
   return (
     <BrowserRouter>
       <CartProvider>
-        <Toaster position="top-right" />
+        <Toaster position="top-right" containerStyle={{ top: 80 }} />
         <CartSidebar />
         <Routes>
           <Route path="/" element={<Tienda />} />
