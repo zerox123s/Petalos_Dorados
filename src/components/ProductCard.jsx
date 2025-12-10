@@ -1,5 +1,6 @@
 import { ShoppingCart, Flower, Leaf } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { getOptimizedCloudinaryUrl } from '../utils/image';
 
 export default function ProductCard({ product, negocio, onClick }) {
     const { addToCart } = useCart();
@@ -9,6 +10,8 @@ export default function ProductCard({ product, negocio, onClick }) {
         if (!product.activo) return;
         addToCart(product);
     };
+
+    const imageUrl = getOptimizedCloudinaryUrl(product.imagen_url, { width: 400 });
 
     return (
         <div
@@ -27,7 +30,7 @@ export default function ProductCard({ product, negocio, onClick }) {
                 </div>
 
                 <img
-                    src={product.imagen_url || 'https://via.placeholder.com/400'}
+                    src={imageUrl || 'https://via.placeholder.com/400'}
                     alt={product.nombre}
                     className={`w-full h-full object-cover ${!product.activo ? 'grayscale opacity-60' : ''}`}
                 />

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 import { useNavigate } from 'react-router-dom'
 import { uploadImage } from '../uploadImage';
+import { getOptimizedCloudinaryUrl } from '../utils/image';
 import {
   Package, Tags, Settings, LogOut, Menu, Edit, Trash2, Plus, Store,
   Eye, EyeOff, Save, Image, DollarSign, FileCheck2, Instagram, Facebook, X, Link, Phone
@@ -306,7 +307,7 @@ export default function Dashboard() {
                         <tr key={prod.id} className="hover:bg-gray-50 transition-colors">
                           <td className="p-4 md:p-5">
                             <div className="flex items-center gap-3 md:gap-4 min-w-[200px]">
-                              <img src={prod.imagen_url || 'https://via.placeholder.com/100'} alt={prod.nombre} className="w-12 h-12 md:w-16 md:h-16 rounded-xl object-cover flex-shrink-0 bg-gray-100" />
+                              <img src={getOptimizedCloudinaryUrl(prod.imagen_url, { width: 200 }) || 'https://via.placeholder.com/100'} alt={prod.nombre} className="w-12 h-12 md:w-16 md:h-16 rounded-xl object-cover flex-shrink-0 bg-gray-100" />
                               <div>
                                 <div className="font-bold text-gray-800 text-sm md:text-base">{prod.nombre}</div>
                                 <div className="text-xs md:text-sm text-gray-500 line-clamp-1">{(prod.descripcion || '').substring(0, 40) + (prod.descripcion?.length > 40 ? '...' : '')}</div>
@@ -344,7 +345,7 @@ export default function Dashboard() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left simple-table">
                     <thead className="bg-gray-50"><tr><th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Nombre</th><th className="p-4 md:p-5 text-sm font-semibold text-gray-600 hidden md:table-cell whitespace-nowrap">Imagen</th><th className="p-4 md:p-5 min-w-[100px]"></th></tr></thead>
-                    <tbody className="divide-y divide-gray-100">{categorias.map(cat => (<tr key={cat.id} className="hover:bg-gray-50 transition-colors"><td className="p-4 md:p-5 font-bold text-gray-800">{cat.nombre}</td><td className="p-4 md:p-5 text-gray-500 text-sm hidden md:table-cell"><img src={cat.imagen_url || 'https://via.placeholder.com/100'} alt={cat.nombre} className="w-16 h-10 rounded-lg object-cover bg-gray-100" /></td><td className="px-4 py-4 md:px-6 text-right whitespace-nowrap flex justify-end gap-1"><button onClick={() => handleOpenEditCategory(cat)} className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-gray-100"><Edit size={18} /></button><button onClick={() => handleDeleteCategory(cat.id)} className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100"><Trash2 size={18} /></button></td></tr>))}</tbody>
+                    <tbody className="divide-y divide-gray-100">{categorias.map(cat => (<tr key={cat.id} className="hover:bg-gray-50 transition-colors"><td className="p-4 md:p-5 font-bold text-gray-800">{cat.nombre}</td><td className="p-4 md:p-5 text-gray-500 text-sm hidden md:table-cell"><img src={getOptimizedCloudinaryUrl(cat.imagen_url, { width: 200 }) || 'https://via.placeholder.com/100'} alt={cat.nombre} className="w-16 h-10 rounded-lg object-cover bg-gray-100" /></td><td className="px-4 py-4 md:px-6 text-right whitespace-nowrap flex justify-end gap-1"><button onClick={() => handleOpenEditCategory(cat)} className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-gray-100"><Edit size={18} /></button><button onClick={() => handleDeleteCategory(cat.id)} className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100"><Trash2 size={18} /></button></td></tr>))}</tbody>
                   </table>
                 </div>
               </div>

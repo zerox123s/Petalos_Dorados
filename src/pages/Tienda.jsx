@@ -7,6 +7,7 @@ import RevealOnScroll from '../components/RevealOnScroll';
 import ProductDetailModal from '../components/ProductDetailModal';
 import Footer from '../components/Footer';
 import { Gift, Sparkles, Flower2, ChevronLeft, ChevronRight, Clock, Heart, ArrowRight } from 'lucide-react';
+import { getOptimizedCloudinaryUrl } from '../utils/image';
 
 const DEFAULT_CATEGORY_IMAGE = 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80';
 
@@ -225,7 +226,7 @@ export default function Tienda() {
                     <Link to={`/categorias#${cat.nombre.toLowerCase().replace(/ /g, '-')}`} className="block group/card h-full">
                       <div className="relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-lg group-hover/card:shadow-2xl transition-all duration-500">
                         <img
-                          src={cat.imagen_url || DEFAULT_CATEGORY_IMAGE}
+                          src={getOptimizedCloudinaryUrl(cat.imagen_url, { width: 400 }) || DEFAULT_CATEGORY_IMAGE}
                           alt={cat.nombre}
                           className="w-full h-full object-cover transform group-hover/card:scale-110 transition-transform duration-500"
                         />
