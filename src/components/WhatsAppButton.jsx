@@ -6,8 +6,8 @@ export default function WhatsAppButton() {
     const { business } = useCart();
     const location = useLocation();
 
-    // Hide on Admin Dashboard
-    if (location.pathname.startsWith('/admin') || !business?.celular_whatsapp) return null;
+    // Hide on Admin Dashboard and Login page
+    if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login') || !business?.celular_whatsapp) return null;
 
     const handleClick = () => {
         const phoneNumber = business.celular_whatsapp.replace(/\D/g, ''); // Remove non-digits

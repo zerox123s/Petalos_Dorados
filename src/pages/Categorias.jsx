@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Navbar from '../components/Navbar';
@@ -25,6 +25,11 @@ export default function Categorias() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const location = useLocation();
+
+  // Instant Scroll on Hash Change (Filter)
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.hash]);
 
   // Filter Logic
   const activeHash = location.hash.replace('#', '');
