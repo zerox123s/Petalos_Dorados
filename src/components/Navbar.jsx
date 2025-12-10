@@ -1,34 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShoppingCart, Flower, Facebook, Instagram, Phone, Mail, MapPin } from 'lucide-react';
-import { supabase } from '../supabase';
+import { Menu, X, ShoppingCart, Flower, Facebook, Instagram, Phone, MapPin, ChevronDown, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
 
-  const [negocio, setNegocio] = useState(null);
-  const { cartCount, openCart } = useCart();
+  // Consume Global Context
+  const { cartCount, openCart, business: negocio, categories: categorias } = useCart();
   const location = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); // Synchronous instant scroll
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
-    obtenerNombre();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const obtenerNombre = async () => {
-    const { data } = await supabase.from('negocio').select('*').single();
-    if (data) {
-      setNegocio(data);
-    }
-  };
-
   const navLinks = [
     { name: 'Inicio', path: '/' },
-    { name: 'Categorías', path: '/categorias' },
+    { name: 'Categorías', path: '/categorias', hasDropdown: true },
     { name: 'Contacto', path: '/contacto' },
   ];
 
@@ -92,16 +88,50 @@ export default function Navbar() {
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="text-sm font-bold text-gray-600 hover:text-[#BE185D] transition-colors relative group py-2"
-              >
-                {link.name}
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-[#BE185D] transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"></span>
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              if (link.hasDropdown) {
+                return (
+                  <div key={link.name} className="relative group">
+                    <Link
+                      to={link.path}
+                      className="flex items-center gap-1 text-sm font-bold text-gray-600 hover:text-[#BE185D] transition-colors py-2"
+                    >
+                      {link.name}
+                      <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
+                    </Link>
+
+                    {/* Dropdown Menu */}
+                    <div className="absolute top-full left-0 w-56 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                      <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+                        {categorias.length > 0 ? (
+                          categorias.map(cat => (
+                            <Link
+                              key={cat.id}
+                              to={`/categorias#${cat.nombre.toLowerCase().replace(/ /g, '-')}`}
+                              className="block px-4 py-3 text-sm text-gray-600 hover:bg-pink-50 hover:text-[#BE185D] transition-colors border-b border-gray-50 last:border-0"
+                            >
+                              {cat.nombre}
+                            </Link>
+                          ))
+                        ) : (
+                          <span className="block px-4 py-3 text-xs text-gray-400">Cargando...</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className="text-sm font-bold text-gray-600 hover:text-[#BE185D] transition-colors relative group py-2"
+                >
+                  {link.name}
+                  <span className="absolute inset-x-0 bottom-0 h-0.5 bg-[#BE185D] transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"></span>
+                </Link>
+              );
+            })}
           </div>
 
           {/* ACTIONS */}
@@ -130,7 +160,7 @@ export default function Navbar() {
       />
 
       {/* Drawer */}
-      <div className={`fixed top-0 left-0 z-[70] w-64 h-full bg-white shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div className={`fixed top-0 left-0 z-[70] w-72 h-full bg-white shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-4 flex justify-end">
           <button
             onClick={() => setIsOpen(false)}
@@ -139,17 +169,57 @@ export default function Navbar() {
             <X size={24} />
           </button>
         </div>
-        <div className="flex flex-col gap-2 px-6 pt-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              onClick={() => setIsOpen(false)}
-              className="text-lg font-bold text-gray-800 py-3 border-b border-gray-100 hover:text-pink-600 hover:pl-2 transition-all"
-            >
-              {link.name}
-            </Link>
-          ))}
+        <div className="flex flex-col gap-2 px-6 pt-2">
+          {navLinks.map((link) => {
+            if (link.hasDropdown) {
+              return (
+                <div key={link.name} className="flex flex-col border-b border-gray-100">
+                  <div className="flex items-center justify-between py-3">
+                    <Link
+                      to={link.path}
+                      onClick={() => setIsOpen(false)}
+                      className="text-lg font-bold text-gray-800 hover:text-pink-600 transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                    <button
+                      onClick={() => setMobileCategoriesOpen(!mobileCategoriesOpen)}
+                      className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"
+                    >
+                      <ChevronDown size={20} className={`transform transition-transform duration-300 ${mobileCategoriesOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                  </div>
+
+                  {/* Mobile Submenu */}
+                  <div className={`overflow-hidden transition-all duration-300 ${mobileCategoriesOpen ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
+                    <div className="flex flex-col gap-2 pl-4 border-l-2 border-pink-100 ml-1">
+                      {categorias.map(cat => (
+                        <Link
+                          key={cat.id}
+                          to={`/categorias#${cat.nombre.toLowerCase().replace(/ /g, '-')}`}
+                          onClick={() => setIsOpen(false)}
+                          className="text-gray-600 py-2 hover:text-[#BE185D] hover:pl-2 transition-all flex items-center gap-2"
+                        >
+                          <ChevronRight size={14} className="text-pink-400" />
+                          {cat.nombre}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <Link
+                key={link.name}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
+                className="text-lg font-bold text-gray-800 py-3 border-b border-gray-100 hover:text-pink-600 hover:pl-2 transition-all"
+              >
+                {link.name}
+              </Link>
+            );
+          })}
 
           {/* Mobile Social Links (Moved from Top Bar) */}
           <div className="mt-8 pt-6 border-t border-gray-100">

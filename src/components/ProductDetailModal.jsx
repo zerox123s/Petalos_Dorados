@@ -1,4 +1,4 @@
-import { X, ShoppingCart, Leaf, Share2, Minus, Plus } from 'lucide-react';
+import { X, ShoppingCart, Leaf, Share2, Minus, Plus, Flower } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -7,15 +7,19 @@ export default function ProductDetailModal({ product, onClose }) {
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
 
-    if (!product) return null;
+    // ... code ...
 
     // Prevent background scrolling when modal is open
     useEffect(() => {
-        document.body.style.overflow = 'hidden';
+        if (product) {
+            document.body.style.overflow = 'hidden';
+        }
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, []);
+    }, [product]);
+
+    if (!product) return null;
 
     const handleAddToCart = () => {
         if (!product.activo) return;
@@ -71,9 +75,10 @@ export default function ProductDetailModal({ product, onClose }) {
                         alt={product.nombre}
                         className="w-full h-full object-cover"
                     />
-                    {/* Category Badge */}
-                    <div className="absolute top-6 left-6">
-                        <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-4 py-2 rounded-full shadow-sm">
+                    {/* Category Badge - Updated to Match ProductCard */}
+                    <div className="absolute top-6 left-6 z-10">
+                        <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5">
+                            <Flower size={14} className="text-pink-600" />
                             {product.categorias?.nombre}
                         </span>
                     </div>

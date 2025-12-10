@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../supabase';
+import { useCart } from '../context/CartContext';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
 import RevealOnScroll from '../components/RevealOnScroll';
@@ -11,9 +11,8 @@ import { Gift, Sparkles, Flower2, ChevronLeft, ChevronRight, Clock, Heart, Arrow
 const DEFAULT_CATEGORY_IMAGE = 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80';
 
 export default function Tienda() {
-  const [productos, setProductos] = useState([]);
-  const [categorias, setCategorias] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Consume Global Context
+  const { products: productos, categories: categorias, isShopLoading: loading } = useCart();
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Hero Carousel State
@@ -27,24 +26,9 @@ export default function Tienda() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentHeroSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000); // Slower interval (5s) for better UX
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    cargarDatos();
-  }, []);
-
-  const cargarDatos = async () => {
-    try {
-      const { data: cats } = await supabase.from('categorias').select('*').order('nombre', { ascending: true });
-      const { data: prods } = await supabase.from('productos').select('*, categorias(nombre)').eq('activo', true).order('id', { ascending: false });
-
-      if (cats) setCategorias(cats);
-      if (prods) setProductos(prods);
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
-  };
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);

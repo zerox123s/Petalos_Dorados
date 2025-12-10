@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { supabase } from '../supabase';
 
 const CartContext = createContext();
 
@@ -11,20 +12,53 @@ export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
 
-    // Optional: Load from local storage on mount
+    // Global Shop Data
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [business, setBusiness] = useState(null);
+    const [isShopLoading, setIsShopLoading] = useState(true);
+
+    // Initial Data Fetch & Local Storage
     useEffect(() => {
+        // Local Storage for Cart
         const savedCart = localStorage.getItem('cart');
         if (savedCart) {
             setCartItems(JSON.parse(savedCart));
         }
+
+        // Fetch Global Shop Data
+        const fetchShopData = async () => {
+            try {
+                const [
+                    { data: prods },
+                    { data: cats },
+                    { data: neg }
+                ] = await Promise.all([
+                    supabase.from('productos').select('*, categorias(nombre)').eq('activo', true).order('id', { ascending: false }),
+                    supabase.from('categorias').select('*').order('nombre', { ascending: true }),
+                    supabase.from('negocio').select('*').single()
+                ]);
+
+                if (prods) setProducts(prods);
+                if (cats) setCategories(cats);
+                if (neg) setBusiness(neg);
+            } catch (error) {
+                console.error('Error loading shop data:', error);
+                toast.error('Error al cargar datos de la tienda');
+            } finally {
+                setIsShopLoading(false);
+            }
+        };
+
+        fetchShopData();
     }, []);
 
-    // Optional: Save to local storage on change
+    // Save Cart to Local Storage
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cartItems));
     }, [cartItems]);
 
-    const addToCart = (product, quantity = 1) => {
+    const addToCart = (product, quantity = 1, showToast = true) => {
         // Check existence based on current state, NOT inside the setter
         const existingItem = cartItems.find((item) => item.id === product.id);
 
@@ -44,20 +78,24 @@ export const CartProvider = ({ children }) => {
         // We'll make it slightly larger by default as requested.
 
         if (existingItem) {
-            toast.success(`Se agregaron ${quantity} unidades de ${product.nombre}`, {
-                style: { ...toastStyle, fontWeight: 'bold' },
-                className: 'md:text-lg md:px-6 md:py-4', // Tailwind classes for desktop
-            });
+            if (showToast) {
+                toast.success(`Se agregaron ${quantity} unidades de ${product.nombre}`, {
+                    style: { ...toastStyle, fontWeight: 'bold' },
+                    className: 'md:text-lg md:px-6 md:py-4', // Tailwind classes for desktop
+                });
+            }
             setCartItems((prevItems) =>
                 prevItems.map((item) =>
                     item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
                 )
             );
         } else {
-            toast.success(`${product.nombre} agregado al carrito`, {
-                style: { ...toastStyle, fontWeight: 'bold' },
-                className: 'md:text-lg md:px-6 md:py-4', // Tailwind classes for desktop
-            });
+            if (showToast) {
+                toast.success(`${product.nombre} agregado al carrito`, {
+                    style: { ...toastStyle, fontWeight: 'bold' },
+                    className: 'md:text-lg md:px-6 md:py-4', // Tailwind classes for desktop
+                });
+            }
             setCartItems((prevItems) => [...prevItems, { ...product, quantity }]);
         }
     };
@@ -75,9 +113,11 @@ export const CartProvider = ({ children }) => {
         });
     };
 
-    const removeFromCart = (productId) => {
+    const removeFromCart = (productId, showToast = true) => {
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== productId));
-        toast.error('Producto eliminado del carrito');
+        if (showToast) {
+            toast.error('Producto eliminado del carrito');
+        }
     };
 
     const clearCart = () => {
@@ -102,6 +142,10 @@ export const CartProvider = ({ children }) => {
         toggleCart,
         openCart,
         closeCart,
+        products,
+        categories,
+        business,
+        isShopLoading
     };
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -98,14 +98,14 @@ export default function CartSidebar() {
                                                         <Minus size={12} />
                                                     </button>
                                                     <span className="text-sm font-bold w-5 text-center">{item.quantity}</span>
-                                                    <button onClick={() => addToCart(item)} className="w-6 h-6 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-600 hover:text-pink-600">
+                                                    <button onClick={() => addToCart(item, 1, false)} className="w-6 h-6 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-600 hover:text-pink-600">
                                                         <Plus size={12} />
                                                     </button>
                                                 </div>
                                                 <span className="font-bold text-gray-900 text-sm">S/. {(item.precio * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
-                                        <button onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-red-500 self-start p-1"><Trash2 size={16} /></button>
+                                        <button onClick={() => removeFromCart(item.id, false)} className="text-gray-400 hover:text-red-500 self-start p-1"><Trash2 size={16} /></button>
                                     </div>
                                 ))}
                             </div>

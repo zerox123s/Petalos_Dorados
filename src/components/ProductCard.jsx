@@ -19,7 +19,7 @@ export default function ProductCard({ product, negocio, onClick }) {
             <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
 
                 {/* Category Badge (Floating) */}
-                <div className="absolute top-3 left-3 md:top-5 md:left-5 z-10">
+                <div className="absolute bottom-2 left-2 md:bottom-3 md:left-3 z-10">
                     <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-[10px] md:text-xs font-bold px-2 py-1 md:px-4 md:py-2 rounded-full shadow-sm flex items-center gap-1 md:gap-1.5">
                         <Flower size={10} className="text-pink-600 md:w-3.5 md:h-3.5" />
                         {product.categorias?.nombre}
