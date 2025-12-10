@@ -11,7 +11,8 @@ export default function WhatsAppButton() {
 
     const handleClick = () => {
         const phoneNumber = business.celular_whatsapp.replace(/\D/g, ''); // Remove non-digits
-        const message = encodeURIComponent("Hola, quisiera más información sobre sus flores.");
+        const defaultMessage = "Hola, quisiera más información sobre sus flores.";
+        const message = encodeURIComponent(business?.mensaje_pedidos || defaultMessage);
         window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
     };
 

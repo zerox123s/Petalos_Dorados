@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { uploadImage } from '../uploadImage';
 import {
   Package, Tags, Settings, LogOut, Menu, Edit, Trash2, Plus, Store,
-  Eye, EyeOff, Save, Image, DollarSign, FileCheck2, Instagram, Facebook, X
+  Eye, EyeOff, Save, Image, DollarSign, FileCheck2, Instagram, Facebook, X, Link, Phone
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -51,6 +51,7 @@ export default function Dashboard() {
   const [productos, setProductos] = useState([])
   const [categorias, setCategorias] = useState([])
   const [datosNegocio, setDatosNegocio] = useState({})
+  const [redesSociales, setRedesSociales] = useState([])
 
   const [newCategoryData, setNewCategoryData] = useState({ nombre: '' })
   const [newCategoryFile, setNewCategoryFile] = useState(null);
@@ -68,9 +69,11 @@ export default function Dashboard() {
     const { data: prods } = await supabase.from('productos').select('*, categorias(nombre)').order('created_at', { ascending: false })
     const { data: cats } = await supabase.from('categorias').select('*').order('created_at', { ascending: true })
     const { data: neg } = await supabase.from('negocio').select('*').single()
+    const { data: redes } = await supabase.from('redes_sociales').select('*').order('created_at', { ascending: true })
     if (prods) setProductos(prods)
     if (cats) setCategorias(cats)
     if (neg) setDatosNegocio(neg)
+    if (redes) setRedesSociales(redes)
   }
 
   // --- Handlers ---
@@ -115,14 +118,87 @@ export default function Dashboard() {
     cargarDatos();
   }
   const handleDeleteCategory = (id) => { setConfirmModalState({ isOpen: true, title: 'Eliminar Categoría', message: 'Cuidado: Los productos asociados quedarán sin categoría.', onConfirm: async () => { await supabase.from('categorias').delete().eq('id', id); toast.success("Categoría eliminada"); cargarDatos(); } }); }
-  const handleUpdateNegocio = async (e) => {
+  
+  const [newRedSocial, setNewRedSocial] = useState({ nombre: '', url: '' });
+  
+  // Lista predefinida de redes sociales
+  const PREDEFINED_NETWORKS = ['TikTok', 'Facebook', 'Gmail', 'WhatsApp', 'Instagram'];
+
+  // Filtrar las redes que ya han sido agregadas
+  const existingNetworkNames = redesSociales.map(rs => rs.nombre);
+  const availableNetworks = PREDEFINED_NETWORKS.filter(n => !existingNetworkNames.includes(n));
+
+  useEffect(() => {
+    // Si las redes disponibles cambian, actualizamos el estado del formulario para que el select tenga un valor por defecto
+    if (availableNetworks.length > 0) {
+      setNewRedSocial(prev => ({ ...prev, nombre: availableNetworks[0] }));
+    } else {
+      setNewRedSocial(prev => ({ ...prev, nombre: '' }));
+    }
+  }, [redesSociales]); // Se ejecuta cada vez que las redes sociales cargadas cambian
+
+
+  const handleRedSocialChange = (id, field, value) => {
+    setRedesSociales(redesSociales.map(rs => rs.id === id ? { ...rs, [field]: value } : rs));
+  };
+
+  const handleAddRedSocial = async (e) => {
+    e.preventDefault();
+    if (!newRedSocial.nombre.trim() || !newRedSocial.url.trim()) return toast.error('Debes seleccionar una red y completar la URL.');
+    
+    const loadingToast = toast.loading('Agregando red social...');
+    try {
+      const { error } = await supabase.from('redes_sociales').insert([newRedSocial]);
+      if (error) throw error;
+      
+      toast.success('Red social agregada.');
+      setNewRedSocial({ nombre: availableNetworks.length > 1 ? availableNetworks[1] : '', url: '' }); // Reset form
+      cargarDatos(); // Recargar todos los datos para reflejar el cambio
+    } catch (error) {
+      if (error.code === '23505') { 
+        toast.error('Ya existe una red social con ese nombre.');
+      } else {
+        toast.error('Error: ' + error.message);
+      }
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  };
+
+  const handleDeleteRedSocial = (id) => {
+    setConfirmModalState({
+      isOpen: true,
+      title: 'Eliminar Red Social',
+      message: '¿Estás seguro de que quieres eliminar esta red social?',
+      onConfirm: async () => {
+        await supabase.from('redes_sociales').delete().eq('id', id);
+        toast.success("Red social eliminada");
+        cargarDatos();
+      }
+    });
+  };
+
+  const handleSaveConfig = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading('Actualizando...');
-    const { error } = await supabase.from('negocio').update(datosNegocio).eq('id', datosNegocio.id);
+
+    const { error: negocioError } = await supabase.from('negocio').update(datosNegocio).eq('id', datosNegocio.id);
+
+    const updatePromises = redesSociales.map(rs =>
+      supabase.from('redes_sociales').update({ url: rs.url }).eq('id', rs.id)
+    );
+    const results = await Promise.all(updatePromises);
+    const redesError = results.some(res => res.error);
+
     toast.dismiss(loadingToast);
-    if (error) toast.error("Error: " + error.message);
-    else toast.success("¡Configuración guardada!");
+    if (negocioError || redesError) {
+      toast.error("Error al guardar. Intenta de nuevo.");
+    } else {
+      toast.success("¡Configuración guardada!");
+    }
+    cargarDatos();
   }
+
   const productosVisibles = productos.filter(p => p.activo).length;
 
   const handleTabClick = (tab) => {
@@ -231,16 +307,94 @@ export default function Dashboard() {
             </div>
           )}
           {activeTab === 'config' && (
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
-                <h3 className="text-xl font-bold mb-6 text-gray-800">Datos del Negocio y Redes</h3>
-                <form onSubmit={handleUpdateNegocio} className="space-y-6">
-                  <div><label className="block text-sm font-medium text-gray-700 mb-2">Nombre de la Tienda</label><input className="w-full p-3 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500" value={datosNegocio.nombre_tienda || ''} onChange={e => setDatosNegocio({ ...datosNegocio, nombre_tienda: e.target.value })} /></div>
-                  <div><label className="block text-sm font-medium text-gray-700 mb-2">WhatsApp (con código de país)</label><input className="w-full p-3 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500" value={datosNegocio.celular_whatsapp || ''} onChange={e => setDatosNegocio({ ...datosNegocio, celular_whatsapp: e.target.value })} /></div>
-                  <div><label className="block text-sm font-medium text-gray-700 mb-2">Enlace de Facebook</label><input className="w-full p-3 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500" placeholder="https://facebook.com/tu-pagina" value={datosNegocio.enlace_facebook || ''} onChange={e => setDatosNegocio({ ...datosNegocio, enlace_facebook: e.target.value })} /></div>
-                  <div><label className="block text-sm font-medium text-gray-700 mb-2">Enlace de Instagram</label><input className="w-full p-3 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500" placeholder="https://instagram.com/tu-usuario" value={datosNegocio.enlace_instagram || ''} onChange={e => setDatosNegocio({ ...datosNegocio, enlace_instagram: e.target.value })} /></div>
-                  <div><label className="block text-sm font-medium text-gray-700 mb-2">Mensaje de Pedido Predeterminado</label><textarea rows="3" className="w-full p-3 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500" value={datosNegocio.mensaje_pedidos || ''} onChange={e => setDatosNegocio({ ...datosNegocio, mensaje_pedidos: e.target.value })} /></div>
-                  <button type="submit" className="w-full py-3 bg-gray-800 text-white rounded-lg font-bold hover:bg-black transition flex items-center justify-center gap-2"><Save size={18} /> Guardar Configuración</button>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 py-8">
+              <div className="lg:col-span-2">
+                <div className="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-pink-600">
+                  <h2 className="text-2xl font-bold text-gray-800">Configuración de la Tienda</h2>
+                  <p className="mt-2 text-gray-500">
+                    Aquí puedes modificar los detalles principales de tu negocio y gestionar los enlaces a tus redes sociales.
+                  </p>
+                  <div className="mt-6 space-y-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center flex-shrink-0">
+                        <Store size={22} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-700">Datos Generales</h4>
+                        <p className="text-sm text-gray-500">Nombre, ubicación y datos de contacto.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0">
+                        <Link size={22} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-700">Redes Sociales</h4>
+                        <p className="text-sm text-gray-500">Enlaces que aparecerán en tu página.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-3">
+                <form onSubmit={handleSaveConfig} className="space-y-8">
+                  {/* Datos del Negocio */}
+                  <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                    <h3 className="text-xl font-bold mb-6 text-gray-800">Datos del Negocio</h3>
+                    <div className="space-y-6">
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><Store size={18} /></span>
+                        <input id="nombre_tienda" type="text" placeholder="Nombre de tu tienda" className="w-full pl-10 border-gray-300 border rounded-lg py-2.5 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200" value={datosNegocio.nombre_tienda || ''} onChange={e => setDatosNegocio({ ...datosNegocio, nombre_tienda: e.target.value })} />
+                      </div>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><Package size={18} /></span>
+                        <input id="ubicacion" type="text" placeholder="Ciudad, Región" className="w-full pl-10 border-gray-300 border rounded-lg py-2.5 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200" value={datosNegocio.ubicacion || ''} onChange={e => setDatosNegocio({ ...datosNegocio, ubicacion: e.target.value })} />
+                      </div>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><Phone size={18} /></span>
+                        <input id="celular_whatsapp" type="text" placeholder="WhatsApp con código de país" className="w-full pl-10 border-gray-300 border rounded-lg py-2.5 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200" value={datosNegocio.celular_whatsapp || ''} onChange={e => setDatosNegocio({ ...datosNegocio, celular_whatsapp: e.target.value })} />
+                      </div>
+                      <div>
+                        <textarea id="mensaje_pedidos" rows="3" placeholder="Mensaje predeterminado para WhatsApp" className="w-full border-gray-300 border rounded-lg p-3 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200" value={datosNegocio.mensaje_pedidos || ''} onChange={e => setDatosNegocio({ ...datosNegocio, mensaje_pedidos: e.target.value })} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Redes Sociales */}
+                  <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                    <h3 className="text-xl font-bold mb-6 text-gray-800">Redes Sociales</h3>
+                    <div className="space-y-3 mb-6">
+                      {redesSociales.length > 0 ? (
+                        redesSociales.map((rs) => (
+                          <div key={rs.id} className="flex items-center gap-3">
+                            <span className="w-36 p-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold text-center">{rs.nombre}</span>
+                            <input type="text" placeholder="https://..." value={rs.url} onChange={(e) => handleRedSocialChange(rs.id, 'url', e.target.value)} className="flex-1 p-2 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm transition duration-200" />
+                            <button type="button" onClick={() => handleDeleteRedSocial(rs.id)} className="p-2 text-red-500 hover:bg-red-100 rounded-full transition duration-200"><Trash2 size={18} /></button>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-center text-gray-500 py-4 italic">No has agregado ninguna red social.</p>
+                      )}
+                    </div>
+                    {availableNetworks.length > 0 && (
+                      <div className="pt-6 border-t border-gray-200">
+                        <div className="flex items-center gap-3">
+                          <select value={newRedSocial.nombre} onChange={e => setNewRedSocial({ ...newRedSocial, nombre: e.target.value })} className="w-36 p-2.5 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white text-gray-700 transition duration-200 text-sm">
+                            {availableNetworks.map(net => <option key={net} value={net}>{net}</option>)}
+                          </select>
+                          <input type="text" placeholder="URL Completa" value={newRedSocial.url} onChange={e => setNewRedSocial({ ...newRedSocial, url: e.target.value })} className="flex-1 p-2.5 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200 text-sm" />
+                          <button type="button" onClick={handleAddRedSocial} className="px-4 py-2.5 bg-gray-200 text-gray-800 font-bold rounded-lg hover:bg-gray-300 transition duration-200 flex-shrink-0 text-sm">Agregar</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button type="submit" className="px-8 py-3 bg-pink-600 text-white font-bold rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-4 focus:ring-pink-300 transition duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                      <Save size={20} /> Guardar Cambios
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>

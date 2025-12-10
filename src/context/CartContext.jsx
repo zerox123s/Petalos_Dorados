@@ -16,6 +16,7 @@ export const CartProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [business, setBusiness] = useState(null);
+    const [redes, setRedes] = useState([]); // <-- 1. Add new state
     const [isShopLoading, setIsShopLoading] = useState(true);
 
     // Initial Data Fetch & Local Storage
@@ -32,16 +33,20 @@ export const CartProvider = ({ children }) => {
                 const [
                     { data: prods },
                     { data: cats },
-                    { data: neg }
+                    { data: neg },
+                    { data: redesSociales } // <-- 2. Fetch redes_sociales
                 ] = await Promise.all([
                     supabase.from('productos').select('*, categorias(nombre)').eq('activo', true).order('id', { ascending: false }),
                     supabase.from('categorias').select('*').order('nombre', { ascending: true }),
-                    supabase.from('negocio').select('*').single()
+                    supabase.from('negocio').select('*').single(),
+                    supabase.from('redes_sociales').select('*').order('created_at', { ascending: true }) // <-- 2.
                 ]);
 
                 if (prods) setProducts(prods);
                 if (cats) setCategories(cats);
                 if (neg) setBusiness(neg);
+                if (redesSociales) setRedes(redesSociales); // <-- 3. Set state
+
             } catch (error) {
                 console.error('Error loading shop data:', error);
                 toast.error('Error al cargar datos de la tienda');
@@ -125,6 +130,8 @@ export const CartProvider = ({ children }) => {
         toast('Carrito vaciado', { icon: '🗑️' });
     };
 
+
+
     const toggleCart = () => setIsCartOpen(!isCartOpen);
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
@@ -145,6 +152,7 @@ export const CartProvider = ({ children }) => {
         products,
         categories,
         business,
+        redes, // <-- 4. Export redes
         isShopLoading
     };
 

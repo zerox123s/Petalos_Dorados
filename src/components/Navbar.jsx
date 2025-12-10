@@ -1,7 +1,8 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShoppingCart, Flower, Facebook, Instagram, Phone, MapPin, ChevronDown, ChevronRight } from 'lucide-react';
+import { Menu, X, ShoppingCart, Flower, Phone, MapPin, ChevronDown, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import SocialIcon from './SocialIcon'; // <-- 1. Import SocialIcon
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,7 +10,7 @@ export default function Navbar() {
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
 
   // Consume Global Context
-  const { cartCount, openCart, business: negocio, categories: categorias } = useCart();
+  const { cartCount, openCart, business: negocio, categories: categorias, redes } = useCart(); // <-- 2. Consume `redes`
   const location = useLocation();
 
   useLayoutEffect(() => {
@@ -36,26 +37,22 @@ export default function Navbar() {
           <div className="flex items-center gap-4 md:gap-6 overflow-x-auto w-full md:w-auto justify-center md:justify-start pb-1 md:pb-0 scrollbar-hide">
             <span className="flex items-center gap-1.5 whitespace-nowrap">
               <Phone size={13} className="text-pink-200" />
-              {negocio?.telefono || '+52 55 1234 5678'}
+              {negocio?.celular_whatsapp || '51 999 999 999'}
             </span>
             <span className="flex items-center gap-1.5 whitespace-nowrap">
               <MapPin size={13} className="text-pink-200" />
-              {negocio?.direccion || 'Túcume'}
+              {negocio?.ubicacion || 'Túcume, Lambayeque'}
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span className="text-pink-200">Síguenos:</span>
             <div className="flex items-center gap-3">
-              {negocio?.enlace_facebook && (
-                <a href={negocio.enlace_facebook} target="_blank" rel="noopener noreferrer" className="hover:text-pink-200 transition-colors">
-                  <Facebook size={14} />
+              {/* 3. Dynamic social links for desktop */}
+              {redes.map(red => (
+                <a key={red.nombre} href={red.url} target="_blank" rel="noopener noreferrer" className="hover:text-pink-200 transition-colors">
+                  <SocialIcon name={red.nombre} size={14} />
                 </a>
-              )}
-              {negocio?.enlace_instagram && (
-                <a href={negocio.enlace_instagram} target="_blank" rel="noopener noreferrer" className="hover:text-pink-200 transition-colors">
-                  <Instagram size={14} />
-                </a>
-              )}
+              ))}
             </div>
           </div>
         </div>
@@ -221,30 +218,22 @@ export default function Navbar() {
             );
           })}
 
-          {/* Mobile Social Links (Moved from Top Bar) */}
+          {/* 4. Dynamic social links for mobile */}
           <div className="mt-8 pt-6 border-t border-gray-100">
             <p className="text-sm font-bold text-gray-500 mb-4">Síguenos:</p>
             <div className="flex items-center gap-4">
-              {negocio?.enlace_facebook && (
+              {redes.map(red => (
                 <a
-                  href={negocio.enlace_facebook}
+                  key={red.nombre}
+                  href={red.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors"
+                  className="w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  aria-label={red.nombre}
                 >
-                  <Facebook size={20} />
+                  <SocialIcon name={red.nombre} size={20} />
                 </a>
-              )}
-              {negocio?.enlace_instagram && (
-                <a
-                  href={negocio.enlace_instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center hover:bg-pink-100 transition-colors"
-                >
-                  <Instagram size={20} />
-                </a>
-              )}
+              ))}
             </div>
           </div>
         </div>
