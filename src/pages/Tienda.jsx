@@ -269,13 +269,13 @@ export default function Tienda() {
           {/* Load More Button */}
           {visibleCount < productos.length && (
             <div className="flex justify-center mt-12 mb-14">
-              <button
-                onClick={handleLoadMore}
+              <Link
+                to="/categorias"
                 className="bg-pink-600 text-white px-8 py-3 rounded-full font-bold shadow-md hover:shadow-lg hover:bg-pink-700 transition-all flex items-center gap-2 group"
               >
-                Ver más productos
+                Ver todos los productos
                 <Flower2 size={20} className="group-hover:rotate-45 transition-transform duration-300" />
-              </button>
+              </Link>
             </div>
           )}
         </div>

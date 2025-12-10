@@ -13,6 +13,8 @@ import ProductForm from '../components/ProductForm'
 import CategoryForm from '../components/CategoryForm'
 import ConfirmationModal from '../components/ConfirmationModal'
 
+import Configuracion from './Configuracion';
+
 // --- Componentes de UI ---
 const ImageUploadInput = ({ file, onFileChange }) => (
   <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-center hover:bg-gray-50 transition cursor-pointer relative h-full flex flex-col justify-center">
@@ -52,6 +54,10 @@ export default function Dashboard() {
   const [categorias, setCategorias] = useState([])
   const [datosNegocio, setDatosNegocio] = useState({})
   const [redesSociales, setRedesSociales] = useState([])
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedStatus, setSelectedStatus] = useState('all')
 
   const [newCategoryData, setNewCategoryData] = useState({ nombre: '' })
   const [newCategoryFile, setNewCategoryFile] = useState(null);
@@ -201,6 +207,13 @@ export default function Dashboard() {
 
   const productosVisibles = productos.filter(p => p.activo).length;
 
+  const filteredProductos = productos.filter(p => {
+    const searchTermMatch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase());
+    const categoryMatch = selectedCategory === 'all' || p.categorias?.nombre === selectedCategory;
+    const statusMatch = selectedStatus === 'all' || (selectedStatus === 'visible' && p.activo) || (selectedStatus === 'oculto' && !p.activo);
+    return searchTermMatch && categoryMatch && statusMatch;
+  });
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
     setSidebarOpen(false);
@@ -245,6 +258,37 @@ export default function Dashboard() {
                 </button>
               </div>
 
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 md:p-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Buscar por nombre..."
+                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                  />
+                  <select
+                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
+                    value={selectedCategory}
+                    onChange={e => setSelectedCategory(e.target.value)}
+                  >
+                    <option value="all">Todas las categorías</option>
+                    {categorias.map(cat => (
+                      <option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
+                    ))}
+                  </select>
+                  <select
+                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
+                    value={selectedStatus}
+                    onChange={e => setSelectedStatus(e.target.value)}
+                  >
+                    <option value="all">Todos los estados</option>
+                    <option value="visible">Visible</option>
+                    <option value="oculto">Oculto</option>
+                  </select>
+                </div>
+              </div>
+
               <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left simple-table">
@@ -258,7 +302,7 @@ export default function Dashboard() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                      {productos.map(prod => (
+                      {filteredProductos.map(prod => (
                         <tr key={prod.id} className="hover:bg-gray-50 transition-colors">
                           <td className="p-4 md:p-5">
                             <div className="flex items-center gap-3 md:gap-4 min-w-[200px]">
@@ -307,97 +351,18 @@ export default function Dashboard() {
             </div>
           )}
           {activeTab === 'config' && (
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 py-8">
-              <div className="lg:col-span-2">
-                <div className="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-pink-600">
-                  <h2 className="text-2xl font-bold text-gray-800">Configuración de la Tienda</h2>
-                  <p className="mt-2 text-gray-500">
-                    Aquí puedes modificar los detalles principales de tu negocio y gestionar los enlaces a tus redes sociales.
-                  </p>
-                  <div className="mt-6 space-y-4">
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center flex-shrink-0">
-                        <Store size={22} />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-gray-700">Datos Generales</h4>
-                        <p className="text-sm text-gray-500">Nombre, ubicación y datos de contacto.</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0">
-                        <Link size={22} />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-gray-700">Redes Sociales</h4>
-                        <p className="text-sm text-gray-500">Enlaces que aparecerán en tu página.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-3">
-                <form onSubmit={handleSaveConfig} className="space-y-8">
-                  {/* Datos del Negocio */}
-                  <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
-                    <h3 className="text-xl font-bold mb-6 text-gray-800">Datos del Negocio</h3>
-                    <div className="space-y-6">
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><Store size={18} /></span>
-                        <input id="nombre_tienda" type="text" placeholder="Nombre de tu tienda" className="w-full pl-10 border-gray-300 border rounded-lg py-2.5 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200" value={datosNegocio.nombre_tienda || ''} onChange={e => setDatosNegocio({ ...datosNegocio, nombre_tienda: e.target.value })} />
-                      </div>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><Package size={18} /></span>
-                        <input id="ubicacion" type="text" placeholder="Ciudad, Región" className="w-full pl-10 border-gray-300 border rounded-lg py-2.5 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200" value={datosNegocio.ubicacion || ''} onChange={e => setDatosNegocio({ ...datosNegocio, ubicacion: e.target.value })} />
-                      </div>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><Phone size={18} /></span>
-                        <input id="celular_whatsapp" type="text" placeholder="WhatsApp con código de país" className="w-full pl-10 border-gray-300 border rounded-lg py-2.5 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200" value={datosNegocio.celular_whatsapp || ''} onChange={e => setDatosNegocio({ ...datosNegocio, celular_whatsapp: e.target.value })} />
-                      </div>
-                      <div>
-                        <textarea id="mensaje_pedidos" rows="3" placeholder="Mensaje predeterminado para WhatsApp" className="w-full border-gray-300 border rounded-lg p-3 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200" value={datosNegocio.mensaje_pedidos || ''} onChange={e => setDatosNegocio({ ...datosNegocio, mensaje_pedidos: e.target.value })} />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Redes Sociales */}
-                  <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
-                    <h3 className="text-xl font-bold mb-6 text-gray-800">Redes Sociales</h3>
-                    <div className="space-y-3 mb-6">
-                      {redesSociales.length > 0 ? (
-                        redesSociales.map((rs) => (
-                          <div key={rs.id} className="flex items-center gap-3">
-                            <span className="w-36 p-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold text-center">{rs.nombre}</span>
-                            <input type="text" placeholder="https://..." value={rs.url} onChange={(e) => handleRedSocialChange(rs.id, 'url', e.target.value)} className="flex-1 p-2 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm transition duration-200" />
-                            <button type="button" onClick={() => handleDeleteRedSocial(rs.id)} className="p-2 text-red-500 hover:bg-red-100 rounded-full transition duration-200"><Trash2 size={18} /></button>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-center text-gray-500 py-4 italic">No has agregado ninguna red social.</p>
-                      )}
-                    </div>
-                    {availableNetworks.length > 0 && (
-                      <div className="pt-6 border-t border-gray-200">
-                        <div className="flex items-center gap-3">
-                          <select value={newRedSocial.nombre} onChange={e => setNewRedSocial({ ...newRedSocial, nombre: e.target.value })} className="w-36 p-2.5 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white text-gray-700 transition duration-200 text-sm">
-                            {availableNetworks.map(net => <option key={net} value={net}>{net}</option>)}
-                          </select>
-                          <input type="text" placeholder="URL Completa" value={newRedSocial.url} onChange={e => setNewRedSocial({ ...newRedSocial, url: e.target.value })} className="flex-1 p-2.5 border-gray-300 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200 text-sm" />
-                          <button type="button" onClick={handleAddRedSocial} className="px-4 py-2.5 bg-gray-200 text-gray-800 font-bold rounded-lg hover:bg-gray-300 transition duration-200 flex-shrink-0 text-sm">Agregar</button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex justify-end">
-                    <button type="submit" className="px-8 py-3 bg-pink-600 text-white font-bold rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-4 focus:ring-pink-300 transition duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
-                      <Save size={20} /> Guardar Cambios
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+            <Configuracion
+              datosNegocio={datosNegocio}
+              setDatosNegocio={setDatosNegocio}
+              redesSociales={redesSociales}
+              handleSaveConfig={handleSaveConfig}
+              availableNetworks={availableNetworks}
+              newRedSocial={newRedSocial}
+              setNewRedSocial={setNewRedSocial}
+              handleAddRedSocial={handleAddRedSocial}
+              handleDeleteRedSocial={handleDeleteRedSocial}
+              handleRedSocialChange={handleRedSocialChange}
+            />
           )}
         </main>
       </div>
