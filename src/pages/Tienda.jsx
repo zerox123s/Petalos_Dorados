@@ -7,9 +7,9 @@ import RevealOnScroll from '../components/RevealOnScroll';
 import ProductDetailModal from '../components/ProductDetailModal';
 import Footer from '../components/Footer';
 import { Gift, Sparkles, Flower2, ChevronLeft, ChevronRight, Clock, Heart, ArrowRight } from 'lucide-react';
-import { getOptimizedCloudinaryUrl } from '../utils/image';
+import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/image';
 
-const DEFAULT_CATEGORY_IMAGE = 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80';
+const DEFAULT_CATEGORY_IMAGE = getOptimizedUnsplashUrl('https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80', { width: 500 });
 
 export default function Tienda() {
   // Consume Global Context
@@ -19,9 +19,9 @@ export default function Tienda() {
   // Hero Carousel State
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const heroImages = [
-    "https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&q=80"
+    getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1562690868-60bbe7293e94", { width: 800 }),
+    getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1519378058457-4c29a0a2efac", { width: 800 }),
+    getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1507290439931-a861b5a38200", { width: 800 })
   ];
 
   useEffect(() => {
@@ -177,7 +177,7 @@ export default function Tienda() {
               </div>
               {/* Restored Secondary Floating Image */}
               <div className="absolute -bottom-12 -left-12 w-64 h-48 rounded-2xl overflow-hidden shadow-xl border-4 border-white z-20 animate-float">
-                <img src="https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&q=80" alt="Detalle flores" className="w-full h-full object-cover" />
+                <img src={getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1507290439931-a861b5a38200", { width: 400 })} alt="Detalle flores" className="w-full h-full object-cover" />
               </div>
             </RevealOnScroll>
           </div>

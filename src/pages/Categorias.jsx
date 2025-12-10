@@ -6,9 +6,9 @@ import ProductCard from '../components/ProductCard';
 import Footer from '../components/Footer';
 import ProductDetailModal from '../components/ProductDetailModal';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { getOptimizedCloudinaryUrl } from '../utils/image';
+import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/image';
 
-const DEFAULT_CATEGORY_IMAGE = 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80';
+const DEFAULT_CATEGORY_IMAGE = getOptimizedUnsplashUrl('https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80', { width: 500 });
 
 const CATEGORY_DESCRIPTIONS = {
   'arreglo-flores': 'Diseños florales únicos para embellecer cualquier espacio con frescura y elegancia.',

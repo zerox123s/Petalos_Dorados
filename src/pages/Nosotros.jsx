@@ -1,5 +1,6 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { getOptimizedUnsplashUrl } from '../utils/image';
 
 export default function Nosotros() {
   return (
@@ -9,7 +10,7 @@ export default function Nosotros() {
       {/* HEADER DE PÁGINA */}
       <div className="relative h-[40vh] bg-black">
         <img 
-          src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80" 
+          src={getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80", { width: 1200 })}
           className="w-full h-full object-cover opacity-60" 
         />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -29,8 +30,8 @@ export default function Nosotros() {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
-            <img src="https://images.unsplash.com/photo-1582794543139-8ac92a900275?auto=format&fit=crop&q=80" className="rounded-xl shadow-lg hover:shadow-2xl transition" />
-            <img src="https://images.unsplash.com/photo-1596627685695-17798b350434?auto=format&fit=crop&q=80" className="rounded-xl shadow-lg hover:shadow-2xl transition" />
+            <img src={getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1582794543139-8ac92a900275?auto=format&fit=crop&q=80", { width: 600 })} className="rounded-xl shadow-lg hover:shadow-2xl transition" />
+            <img src={getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1596627685695-17798b350434?auto=format&fit=crop&q=80", { width: 600 })} className="rounded-xl shadow-lg hover:shadow-2xl transition" />
           </div>
 
           <h3 className="text-2xl font-bold text-gray-800 mt-10 mb-4">Nuestro Compromiso</h3>
