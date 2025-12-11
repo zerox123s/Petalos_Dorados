@@ -62,11 +62,11 @@ export default function Footer() {
             <h3 className="text-sm font-bold text-pink-200 tracking-wider uppercase mb-6">Síguenos</h3>
             <div className="flex space-x-4">
               {redes.map(red => (
-                <a 
-                  key={red.nombre} 
-                  href={red.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  key={red.nombre}
+                  href={red.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-white/10 p-3 rounded-full hover:bg-white hover:text-pink-600 transition-all group"
                   aria-label={red.nombre}
                 >
@@ -80,7 +80,8 @@ export default function Footer() {
         {/* Copyright */}
         <div className="mt-6 border-t border-white/10 pt-6 flex justify-center items-center">
           <p className="text-sm text-pink-100/60 text-center">
-            © {new Date().getFullYear()} {negocio?.nombre_tienda || 'Florería'}. Todos los derechos reservados.
+            Copyright © {new Date().getFullYear()} {negocio?.nombre_tienda || 'Florería'}. Todos los derechos reservados.
+            <RouterLink to="/chija" className="ml-2 text-pink-900/10 hover:text-pink-500/50 cursor-pointer transition-colors" aria-hidden="true">•</RouterLink>
           </p>
         </div>
       </div>
