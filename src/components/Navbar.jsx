@@ -49,7 +49,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               {/* 3. Dynamic social links for desktop */}
               {redes.map(red => (
-                <a key={red.nombre} href={red.url} target="_blank" rel="noopener noreferrer" className="hover:text-pink-200 transition-colors">
+                <a key={red.nombre} href={red.url} target="_blank" rel="noopener noreferrer" aria-label={red.nombre} className="hover:text-pink-200 transition-colors">
                   <SocialIcon name={red.nombre} size={14} />
                 </a>
               ))}
@@ -67,6 +67,7 @@ export default function Navbar() {
             {/* MOBILE MENU BUTTON - MOVED TO LEFT */}
             <button
               onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Cerrar menú principal" : "Abrir menú principal"}
               className="md:hidden w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -136,6 +137,7 @@ export default function Navbar() {
             {/* CART ICON */}
             <button
               onClick={openCart}
+              aria-label={`Ver carrito de compras con ${cartCount} productos`}
               className="relative w-10 h-10 rounded-full bg-pink-50 hover:bg-pink-100 text-[#BE185D] flex items-center justify-center transition-all hover:scale-105 group border border-pink-100"
             >
               <ShoppingCart size={20} className="group-hover:rotate-12 transition-transform duration-300" />
@@ -161,6 +163,7 @@ export default function Navbar() {
         <div className="p-4 flex justify-end">
           <button
             onClick={() => setIsOpen(false)}
+            aria-label="Cerrar menú principal"
             className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
           >
             <X size={24} />
@@ -181,6 +184,7 @@ export default function Navbar() {
                     </Link>
                     <button
                       onClick={() => setMobileCategoriesOpen(!mobileCategoriesOpen)}
+                      aria-label={mobileCategoriesOpen ? "Cerrar submenú de categorías" : "Abrir submenú de categorías"}
                       className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"
                     >
                       <ChevronDown size={20} className={`transform transition-transform duration-300 ${mobileCategoriesOpen ? 'rotate-180' : ''}`} />

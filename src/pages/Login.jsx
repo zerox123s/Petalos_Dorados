@@ -111,7 +111,7 @@ export default function Login() {
         </div>
 
         {/* Footer Text */}
-        <p className="text-center text-gray-500 text-xs mt-8">
+        <p className="text-center text-gray-700 text-xs mt-8">
           &copy; {new Date().getFullYear()} Pétalos Dorados. Panel Administrativo.
         </p>
       </div>

@@ -128,7 +128,8 @@ export default function Tienda() {
                   <img
                     key={index}
                     src={img}
-                    alt={`Hero ${index + 1}`}
+                    alt="Flores en exhibición"
+                    fetchpriority={index === 0 ? 'high' : 'low'}
                     className={`absolute inset-0 w-full h-full object-cover rounded-[1.2rem] transition-opacity duration-[1500ms] ease-in-out ${currentHeroSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                   />
                 ))}
@@ -160,7 +161,8 @@ export default function Tienda() {
                   <img
                     key={index}
                     src={img}
-                    alt={`Hero ${index + 1}`}
+                    alt="Flores en exhibición"
+                    fetchpriority={index === 0 ? 'high' : 'low'}
                     className={`absolute inset-0 w-full h-full object-cover rounded-[2rem] transition-opacity duration-[1500ms] ease-in-out ${currentHeroSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                   />
                 ))}

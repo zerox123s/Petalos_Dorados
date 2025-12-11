@@ -1,0 +1,108 @@
+En movil 
+
+80
+Rendimiento
+
+78
+Accesibilidad
+
+100
+Prácticas recomendadas
+
+91
+SEO
+
+problemas encontrados
+Solicitudes que bloquean el renderizado Ahorro estimado de 1310 ms
+Las solicitudes están bloqueando el renderizado inicial de la página, lo que puede retrasar el LCP. Si se posponen o se insertan, estas solicitudes de red pueden salir de la ruta crítica.LCPFCPSin puntuar
+URL
+Tamaño de la transferencia
+Duración
+vercel.app Propio
+8,9 KiB	170 ms
+/assets/index-Co_S1WC_.css(petalos-dorados.vercel.app)
+8,9 KiB
+170 ms
+Google Fonts cdn 
+1,3 KiB	790 ms
+/css2?family=Poppins:wght@400;500;600;700;800&display=swap(fonts.googleapis.com)
+1,3 KiB
+790 ms
+
+Solicitudes que bloquean el renderizado Ahorro estimado de 1310 ms
+Las solicitudes están bloqueando el renderizado inicial de la página, lo que puede retrasar el LCP. Si se posponen o se insertan, estas solicitudes de red pueden salir de la ruta crítica.LCPFCPSin puntuar
+URL
+Tamaño de la transferencia
+Duración
+vercel.app Propio
+8,9 KiB	170 ms
+/assets/index-Co_S1WC_.css(petalos-dorados.vercel.app)
+8,9 KiB
+170 ms
+Google Fonts cdn 
+1,3 KiB	790 ms
+/css2?family=Poppins:wght@400;500;600;700;800&display=swap(fonts.googleapis.com)
+1,3 KiB
+790 ms
+Optimiza el LCP haciendo descubrible la imagen de LCP desde el HTML directamente y evita la carga en diferidoLCPSin puntuar
+carga en diferido no aplicada
+Se debe aplicar fetchpriority=high
+La solicitud es visible en el documento inicial
+Hero 1
+<img alt="Hero 1" class="absolute inset-0 w-full h-full object-cover rounded-[1.2rem] transition-op…" src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=800&amp;q=75&amp;auto=…">
+
+Árbol de dependencia de red
+Evita encadenar solicitudes críticas reduciendo la longitud de las cadenas, disminuyendo el tamaño de los recursos o posponiendo la descarga de recursos innecesarios para mejorar la carga de la página.LCPSin puntuar
+Latencia de ruta crítica máxima: 1577 ms
+Navegación inicial
+https://petalos-dorados.vercel.app - 343 ms, 1,19 KiB
+/css2?family=Poppins:wght@400;500;600;700;800&display=swap(fonts.googleapis.com) - 564 ms, 1,29 KiB
+…v24/pxiEyp8kv….woff2(fonts.gstatic.com) - 1577 ms, 8,51 KiB
+…v24/pxiByp8kv….woff2(fonts.gstatic.com) - 1576 ms, 8,35 KiB
+…v24/pxiByp8kv….woff2(fonts.gstatic.com) - 1577 ms, 8,46 KiB
+/assets/index-B-OUS55I.js(petalos-dorados.vercel.app) - 692 ms, 153,48 KiB
+…v1/productos?select=…(tzwmbknblghjqyflbccj.supabase.co) - 1493 ms, 1,88 KiB
+…v1/categorias?select=*&order=nombre.asc(tzwmbknblghjqyflbccj.supabase.co) - 1476 ms, 1,44 KiB
+…v1/negocio?select=*(tzwmbknblghjqyflbccj.supabase.co) - 1477 ms, 1,27 KiB
+…v1/redes_sociales?select=*&order=created_at.asc(tzwmbknblghjqyflbccj.supabase.co) - 1462 ms, 1,12 KiB
+/assets/index-Co_S1WC_.css(petalos-dorados.vercel.app) - 637 ms, 8,89 KiB
+Diagnósticos
+Reduce el contenido JavaScript que no se use Ahorro estimado de 90 KiB
+Reduce el contenido JavaScript que no se use y retrasa la carga de secuencias de comandos hasta que se necesiten. Así, se reducirán los bytes consumidos por la actividad de red. Consulta cómo reducir el contenido de JavaScript que no se useLCPFCPSin puntuar
+URL
+Tamaño de la transferencia
+Ahorro estimado
+vercel.app Propio
+152,7 KiB	90,0 KiB
+/assets/index-B-OUS55I.js(petalos-dorados.vercel.app)
+152,7 KiB
+90,0 KiB
+Accesibilidad
+Estas comprobaciones permiten identificar oportunidades para mejorar la accesibilidad de tu aplicación web. La detección automática solo puede detectar un subconjunto de problemas y no garantiza la accesibilidad de tu aplicación web, por lo que también te recomendamos que hagas pruebas manuales.
+Nombres y etiquetas
+Los botones no tienen nombres accesibles
+Los enlaces no tienen nombres reconocibles
+Los elementos de imagen no tienen atributos [alt] que sean texto redundante.
+A continuación se indican consejos para mejorar la semántica de los controles de tu aplicación. Estos consejos pueden mejorar la experiencia de los usuarios de tecnologías de asistencia, como los lectores de pantalla.
+Contraste
+Los colores de fondo y de primer plano no tienen una relación de contraste adecuada.
+A continuación se indican consejos para facilitar la lectura del contenido.
+Prácticas recomendadas
+Las áreas táctiles no tienen un tamaño o un espaciado suficientes.
+El documento no tiene un punto de referencia principal.
+General
+No hay mapas de origen para JavaScript propio de gran tamaño
+Los mapas de origen traducen el código minificado al código fuente original. Esto ayuda a los desarrolladores a depurar en producción. Además, Lighthouse puede proporcionar sugerencias adicionales. Plantéate desplegar mapas de origen para disfrutar de estas ventajas. Más información sobre los mapas de origenSin puntuar
+URL
+URL de mapa
+vercel.app Propio
+/assets/index-B-OUS55I.js(petalos-dorados.vercel.app)
+La biblioteca de JavaScript de gran tamaño no tiene un mapa de origen
+General
+No hay mapas de origen para JavaScript propio de gran tamaño
+Los mapas de origen traducen el código minificado al código fuente original. Esto ayuda a los desarrolladores a depurar en producción. Además, Lighthouse puede proporcionar sugerencias adicionales. Plantéate desplegar mapas de origen para disfrutar de estas ventajas. Más información sobre los mapas de origenSin puntuar
+URL
+URL de mapa
+vercel.app Propio
+/assets/index-B-OUS55I.js(petalos-dorados.vercel.app)
+La biblioteca de JavaScript de gran tamaño no tiene un mapa de origen

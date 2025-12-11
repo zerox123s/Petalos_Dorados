@@ -90,6 +90,7 @@ export default function ProductCard({ product, negocio, onClick }) {
                             onClick={handleAddToCart}
                             className="bg-pink-600 text-white p-2 md:p-3.5 rounded-full hover:bg-pink-700 transition-colors shadow-lg hover:shadow-pink-200 group flex-shrink-0"
                             title="Añadir al carrito"
+                            aria-label={`Añadir ${product.nombre} al carrito`}
                         >
                             <ShoppingCart size={18} className="md:w-[22px] md:h-[22px] group-hover:scale-110 transition-transform" />
                         </button>
