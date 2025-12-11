@@ -10,10 +10,13 @@ export default function WhatsAppButton() {
     if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login') || !business?.celular_whatsapp) return null;
 
     const handleClick = () => {
-        const phoneNumber = business.celular_whatsapp.replace(/\D/g, ''); // Remove non-digits
-        const defaultMessage = "Hola, quisiera más información sobre sus flores.";
-        const message = encodeURIComponent(business?.mensaje_pedidos || defaultMessage);
-        window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+        let phoneNumber = business.celular_whatsapp.replace(/\D/g, ''); // Remove non-digits
+        if (phoneNumber.length === 9) phoneNumber = `51${phoneNumber}`; // Add Peru code
+        const e_flower = '\u{1F338}';
+        const defaultMessage = `${e_flower} Hola Pétalos Dorados, visité su web y me gustaría más información sobre sus arreglos ${e_flower}`;
+        // Forzamos el mensaje nuevo ignorando el de la BD por ahora para asegurar el cambio
+        const message = encodeURIComponent(defaultMessage);
+        window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`, '_blank');
     };
 
     return (

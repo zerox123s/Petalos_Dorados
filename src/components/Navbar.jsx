@@ -23,10 +23,22 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   const navLinks = [
     { name: 'Inicio', path: '/' },
     { name: 'Categorías', path: '/categorias', hasDropdown: true },
-    { name: 'Contacto', path: '/contacto' },
+    { name: 'Contáctanos', path: '/contacto' },
   ];
 
   return (
@@ -67,31 +79,29 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
 
           {/* LOGO & MENU BUTTON GROUP */}
-          <div className="flex items-center gap-4">
-            {/* MOBILE MENU BUTTON - MOVED TO LEFT */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? "Cerrar menú principal" : "Abrir menú principal"}
-              className="md:hidden w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+          {/* MOBILE MENU BUTTON - MOVED TO LEFT */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Cerrar menú principal" : "Abrir menú principal"}
+            className="md:hidden w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
 
-            {/* LOGO */}
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="bg-pink-50 p-2 rounded-full group-hover:bg-pink-100 transition-colors">
-                <Flower size={24} className="text-[#BE185D]" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-['Playfair_Display'] text-3xl font-bold text-[#BE185D] leading-none tracking-tight group-hover:text-pink-700 transition-colors">
-                  {negocio?.nombre_tienda || 'Pétalos Dorados'}
-                </span>
-                <span className="text-[0.65rem] uppercase tracking-[0.2em] text-gray-400 font-medium ml-0.5 group-hover:text-pink-400 transition-colors">
-                  Florería
-                </span>
-              </div>
-            </Link>
-          </div>
+          {/* LOGO */}
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="bg-pink-50 p-2 rounded-full group-hover:bg-pink-100 transition-colors">
+              <Flower size={24} className="text-[#BE185D]" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-['Playfair_Display'] text-xl md:text-3xl font-bold text-[#BE185D] leading-none tracking-tight group-hover:text-pink-700 transition-colors">
+                {negocio?.nombre_tienda || 'Pétalos Dorados'}
+              </span>
+              <span className="text-[0.65rem] uppercase tracking-[0.2em] text-gray-400 font-medium ml-0.5 group-hover:text-pink-400 transition-colors">
+                Florería
+              </span>
+            </div>
+          </Link>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-8">
@@ -169,7 +179,15 @@ export default function Navbar() {
 
       {/* Drawer */}
       <div className={`fixed top-0 left-0 z-[70] w-72 h-full bg-white shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-4 flex justify-end">
+        <div className="p-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="bg-pink-50 p-1.5 rounded-full">
+              <Flower size={20} className="text-[#BE185D]" />
+            </div>
+            <span className="font-['Playfair_Display'] text-lg font-bold text-[#BE185D] leading-none tracking-tight">
+              {negocio?.nombre_tienda || 'Pétalos Dorados'}
+            </span>
+          </div>
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Cerrar menú principal"
@@ -182,7 +200,7 @@ export default function Navbar() {
           {navLinks.map((link) => {
             if (link.hasDropdown) {
               return (
-                <div key={link.name} className="flex flex-col border-b border-gray-100">
+                <div key={link.name} className="flex flex-col border-b border-gray-100 last:border-0">
                   <div className="flex items-center justify-between py-3">
                     <Link
                       to={link.path}
@@ -224,7 +242,7 @@ export default function Navbar() {
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
-                className="text-lg font-bold text-gray-800 py-3 border-b border-gray-100 hover:text-pink-600 hover:pl-2 transition-all"
+                className="text-lg font-bold text-gray-800 py-3 border-b border-gray-100 last:border-0 hover:text-pink-600 hover:pl-2 transition-all"
               >
                 {link.name}
               </Link>
@@ -232,7 +250,7 @@ export default function Navbar() {
           })}
 
           {/* 4. Dynamic social links for mobile */}
-          <div className="mt-8 pt-6 border-t border-gray-100">
+          <div className="mt-8 pt-6">
             <p className="text-sm font-bold text-gray-500 mb-4">Síguenos:</p>
             <div className="flex items-center gap-4">
               {redes.map(red => (

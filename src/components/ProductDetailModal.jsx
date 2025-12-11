@@ -41,7 +41,7 @@ export default function ProductDetailModal({ product, onClose }) {
             try {
                 await navigator.share(shareData);
             } catch (err) {
-                console.log('Error al compartir', err);
+                // Silently handle share errors
             }
         } else {
             navigator.clipboard.writeText(window.location.href);

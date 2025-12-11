@@ -9,7 +9,7 @@ export default function Footer() {
   const navLinks = [
     { name: 'Inicio', path: '/' },
     { name: 'Colección', path: '/categorias' },
-    { name: 'Contacto', path: '/#contacto' },
+    { name: 'Contáctanos', path: '/#contacto' },
   ];
 
   // Get top 5 categories for the footer
@@ -118,7 +118,7 @@ export default function Footer() {
             <ul className="space-y-3 md:space-y-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 lg:gap-0">
               <li className="flex items-start gap-3 text-pink-100/90">
                 <MapPin size={20} className="text-pink-300 mt-0.5 flex-shrink-0" />
-                <span className="text-sm">{negocio?.direccion || 'Ubicación no disponible'}</span>
+                <span className="text-sm">{negocio?.ubicacion || negocio?.direccion || 'Ubicación no disponible'}</span>
               </li>
               <li className="flex items-center gap-3 text-pink-100/90">
                 <Phone size={20} className="text-pink-300 flex-shrink-0" />

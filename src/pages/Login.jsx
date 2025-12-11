@@ -14,11 +14,17 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
 
+    // Artificial delay to prevent timing attacks and brute force (2 seconds minimum)
+    const minDelay = new Promise(resolve => setTimeout(resolve, 2000));
+
     // Intentamos iniciar sesión en Supabase
-    const { error } = await supabase.auth.signInWithPassword({
+    const authPromise = supabase.auth.signInWithPassword({
       email,
       password,
     })
+
+    const [authResult] = await Promise.all([authPromise, minDelay])
+    const { error } = authResult
 
     if (error) {
       toast.error('Credenciales incorrectas')

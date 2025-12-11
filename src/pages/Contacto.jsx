@@ -17,23 +17,56 @@ export default function Contacto() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === 'celular') {
+            let numbersOnly = value.replace(/[^0-9]/g, '');
+            if (numbersOnly.length > 0 && numbersOnly[0] !== '9') {
+                if (numbersOnly.length === 1) return;
+            }
+            if (numbersOnly.length > 9) numbersOnly = numbersOnly.slice(0, 9);
+            setFormData(prev => ({ ...prev, [name]: numbersOnly }));
+            return;
+        }
+
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!formData.nombre || !formData.celular || !formData.mensaje) {
+
+        // Trim inputs to remove accidental whitespace
+        const nombre = formData.nombre.trim();
+        const celular = formData.celular.trim();
+        const mensaje = formData.mensaje.trim();
+
+        if (!nombre || !celular || !mensaje) {
             toast.error('Por favor completa todos los campos');
             return;
         }
 
-        if (!negocio?.celular_whatsapp) {
-            toast.error('El número de contacto no está configurado');
+        // Validación estricta: exactamente 9 dígitos y empezar con 9
+        if (celular.length !== 9 || celular[0] !== '9') {
+            toast.error('El celular debe tener 9 dígitos y empezar con 9');
             return;
         }
 
-        const message = `*Hola, vengo de la web y quisiera contactarme:*\n\n*Nombre:* ${formData.nombre}\n*Celular:* ${formData.celular}\n*Mensaje:* ${formData.mensaje}`;
-        const url = `https://wa.me/${negocio.celular_whatsapp}?text=${encodeURIComponent(message)}`;
+        // Si no hay datos del negocio cargados aún, mostramos error pero más descriptivo
+        if (!negocio?.celular_whatsapp) {
+            toast.error('Error de conexión: No se pudo obtener el número de la tienda. Intenta recargar.');
+            return;
+        }
+
+        // Emojis using ES6 Unicode Escapes
+        const e_flower = '\u{1F338}';
+        const e_user = '\u{1F464}';
+        const e_phone = '\u{1F4F1}';
+        const e_chat = '\u{1F4AC}';
+
+        const message = `${e_flower} *Hola Pétalos Dorados, tengo una consulta:* ${e_flower}\n\n${e_user} *Soy:* ${nombre}\n${e_phone} *Mi Celular:* ${celular}\n\n${e_chat} *Les escribo lo siguiente:*\n_${mensaje}_`;
+        let phoneNumber = negocio.celular_whatsapp.replace(/\D/g, '');
+        if (phoneNumber.length === 9) phoneNumber = `51${phoneNumber}`;
+
+        const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
 
         window.open(url, '_blank');
         setFormData({ nombre: '', celular: '', mensaje: '' });
