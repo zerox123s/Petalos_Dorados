@@ -70,7 +70,7 @@ export default function Contacto() {
                             </div>
                             <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Llámanos / WhatsApp</h3>
                             <p className="text-gray-500 mb-4 text-xs md:text-sm">Estamos disponibles para atenderte</p>
-                            <p className="text-lg md:text-xl font-bold text-[#BE185D] font-mono">{negocio?.telefono || 'Cargando...'}</p>
+                            <p className="text-lg md:text-xl font-bold text-[#BE185D] font-mono">{negocio?.celular_whatsapp || 'Cargando...'}</p>
                         </div>
 
                         {/* Card 2: Location */}
@@ -79,10 +79,15 @@ export default function Contacto() {
                                 <MapPin size={24} className="md:w-7 md:h-7" />
                             </div>
                             <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Nuestra Ubicación</h3>
-                            <p className="text-gray-500 mb-4 text-xs md:text-sm max-w-[200px] mx-auto">{negocio?.direccion || 'Cargando...'}</p>
-                            <div className="flex items-center gap-1 text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
-                                <Truck size={12} />
-                                <span>Envíos Disponibles</span>
+                            <p className="text-lg md:text-xl font-bold text-[#BE185D] font-mono mb-4 max-w-[250px] mx-auto leading-tight">{negocio?.ubicacion || 'Cargando...'}</p>
+                            <div className="flex flex-col items-center gap-2 w-full">
+                                <div className="flex items-center gap-1 text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                                    <Truck size={12} />
+                                    <span>Envíos Disponibles</span>
+                                </div>
+                                <div className="text-xs font-semibold text-pink-700 bg-pink-50 px-3 py-1.5 rounded-full border border-pink-100 w-full text-center">
+                                    📦 Envíos a Chiclayo: Turno Tarde
+                                </div>
                             </div>
                         </div>
 
@@ -159,7 +164,7 @@ export default function Contacto() {
                         {/* Right: Map (Full Height Coverage) */}
                         <div className="lg:w-1/2 relative bg-gray-100 min-h-[400px] lg:min-h-full">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15858.966778465037!2d-79.8596646!3d-6.4269179!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x904cf10a30b4d45d%3A0x103d159074744d0!2zVMO6Y3VtZQ!5e0!3m2!1ses!2spe!4v1717010000000!5m2!1ses!2spe"
+                                src={`https://maps.google.com/maps?q=${encodeURIComponent((negocio?.ubicacion || '') + ', Lambayeque')}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0, minHeight: '100%' }}
@@ -171,21 +176,7 @@ export default function Contacto() {
                             ></iframe>
 
                             {/* Overlay Card on Map (Socials) */}
-                            <div className="hidden md:block absolute bottom-8 left-8 right-8 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/50 animate-fade-in-up">
-                                <p className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 text-center">Síguenos en Redes Sociales</p>
-                                <div className="flex justify-center gap-6">
-                                    {negocio?.enlace_facebook && (
-                                        <a href={negocio.enlace_facebook} target="_blank" rel="noopener noreferrer" className="p-3 bg-[#1877F2] text-white rounded-full hover:scale-110 transition-transform shadow-md">
-                                            <Facebook size={24} />
-                                        </a>
-                                    )}
-                                    {negocio?.enlace_instagram && (
-                                        <a href={negocio.enlace_instagram} target="_blank" rel="noopener noreferrer" className="p-3 bg-gradient-to-tr from-[#FD1D1D] to-[#833AB4] text-white rounded-full hover:scale-110 transition-transform shadow-md">
-                                            <Instagram size={24} />
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
+
                         </div>
 
                     </div>

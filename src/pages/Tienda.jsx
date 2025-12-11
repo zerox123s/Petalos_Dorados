@@ -19,9 +19,9 @@ export default function Tienda() {
   // Hero Carousel State
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const heroImages = [
-    getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1562690868-60bbe7293e94", { width: 800 }),
-    getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1519378058457-4c29a0a2efac", { width: 800 }),
-    getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1507290439931-a861b5a38200", { width: 800 })
+    "/banner/rosasGlobo.webp",
+    "/banner/rosasOso.webp",
+    "/banner/rosas2.webp",
   ];
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function Tienda() {
       setCurrentHeroSlide((prev) => (prev + 1) % heroImages.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [heroImages.length]); // Added dependency for safety, though constant in this specific generic case
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
@@ -38,7 +38,7 @@ export default function Tienda() {
   const [visibleCount, setVisibleCount] = useState(8);
 
   const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 4);
+    setVisibleCount(prev => prev + 8);
   };
 
   const currentProducts = productos.slice(0, visibleCount);
@@ -179,7 +179,7 @@ export default function Tienda() {
               </div>
               {/* Restored Secondary Floating Image */}
               <div className="absolute -bottom-12 -left-12 w-64 h-48 rounded-2xl overflow-hidden shadow-xl border-4 border-white z-20 animate-float">
-                <img src={getOptimizedUnsplashUrl("https://images.unsplash.com/photo-1507290439931-a861b5a38200", { width: 400 })} alt="Detalle flores" className="w-full h-full object-cover" />
+                <img src="/banner/gira.webp" alt="Detalle flores" className="w-full h-full object-cover" />
               </div>
             </RevealOnScroll>
           </div>
@@ -272,13 +272,13 @@ export default function Tienda() {
           {/* Load More Button */}
           {visibleCount < productos.length && (
             <div className="flex justify-center mt-12 mb-14">
-              <Link
-                to="/categorias"
+              <button
+                onClick={handleLoadMore}
                 className="bg-pink-600 text-white px-8 py-3 rounded-full font-bold shadow-md hover:shadow-lg hover:bg-pink-700 transition-all flex items-center gap-2 group"
               >
-                Ver todos los productos
+                Ver más productos
                 <Flower2 size={20} className="group-hover:rotate-45 transition-transform duration-300" />
-              </Link>
+              </button>
             </div>
           )}
         </div>
