@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShoppingCart, Flower, Phone, MapPin, ChevronDown, ChevronRight } from 'lucide-react';
+import { Menu, X, ShoppingCart, Flower, Phone, MapPin, ChevronDown, ChevronRight, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import SocialIcon from './SocialIcon'; // <-- 1. Import SocialIcon
 
@@ -37,11 +37,15 @@ export default function Navbar() {
           <div className="flex items-center gap-4 md:gap-6 overflow-x-auto w-full md:w-auto justify-center md:justify-start pb-1 md:pb-0 scrollbar-hide">
             <span className="flex items-center gap-1.5 whitespace-nowrap">
               <Phone size={13} className="text-pink-200" />
-              {negocio?.celular_whatsapp || '51 999 999 999'}
+              {negocio?.celular_whatsapp || '+51 999 999 999'}
             </span>
             <span className="flex items-center gap-1.5 whitespace-nowrap">
               <MapPin size={13} className="text-pink-200" />
-              {negocio?.ubicacion || 'Túcume, Lambayeque'}
+              {negocio?.ubicacion || 'Lambayeque'}
+            </span>
+            <span className="flex items-center gap-1.5 whitespace-nowrap px-2 py-0.5 bg-pink-700/50 rounded text-pink-100 border border-pink-600/50 hover:bg-pink-700 transition-colors cursor-help" title="Horario: Tardes">
+              <Truck size={13} className="text-pink-200" />
+              Envíos a Chiclayo (Tarde)
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4">
@@ -74,13 +78,18 @@ export default function Navbar() {
             </button>
 
             {/* LOGO */}
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-full bg-[#BE185D] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300">
-                <Flower size={20} />
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="bg-pink-50 p-2 rounded-full group-hover:bg-pink-100 transition-colors">
+                <Flower size={24} className="text-[#BE185D]" />
               </div>
-              <span className="font-bold text-xl text-gray-800 tracking-tight hidden sm:block group-hover:text-[#BE185D] transition-colors">
-                {negocio?.nombre_tienda || 'Pétalos de Oro'}
-              </span>
+              <div className="flex flex-col">
+                <span className="font-['Playfair_Display'] text-3xl font-bold text-[#BE185D] leading-none tracking-tight group-hover:text-pink-700 transition-colors">
+                  {negocio?.nombre_tienda || 'Pétalos Dorados'}
+                </span>
+                <span className="text-[0.65rem] uppercase tracking-[0.2em] text-gray-400 font-medium ml-0.5 group-hover:text-pink-400 transition-colors">
+                  Florería
+                </span>
+              </div>
             </Link>
           </div>
 
