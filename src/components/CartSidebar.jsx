@@ -269,9 +269,11 @@ export default function CartSidebar() {
                                         <input
                                             type="date"
                                             name="date"
-                                            min={new Date().toLocaleDateString('en-CA')} // Uses local time YYYY-MM-DD
+                                            required // Needed for :invalid pseudo-class
+                                            min={new Date().toLocaleDateString('en-CA')}
                                             value={formData.date}
                                             onChange={handleInputChange}
+                                            placeholder="Selecciona una fecha"
                                             className={`w-full px-4 py-3 rounded-xl bg-white border focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all ${errors.date ? 'border-red-300 focus:border-red-300' : 'border-gray-200 focus:border-pink-300'}`}
                                         />
                                         {errors.date && <p className="text-red-500 text-xs mt-1 ml-1">{errors.date}</p>}
