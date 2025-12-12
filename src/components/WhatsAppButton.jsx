@@ -6,15 +6,14 @@ export default function WhatsAppButton() {
     const { business } = useCart();
     const location = useLocation();
 
-    // Hide on Admin Dashboard and Login page
+
     if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login') || !business?.celular_whatsapp) return null;
 
     const handleClick = () => {
-        let phoneNumber = business.celular_whatsapp.replace(/\D/g, ''); // Remove non-digits
-        if (phoneNumber.length === 9) phoneNumber = `51${phoneNumber}`; // Add Peru code
+        let phoneNumber = business.celular_whatsapp.replace(/\D/g, '');
+        if (phoneNumber.length === 9) phoneNumber = `51${phoneNumber}`;
         const e_flower = '\u{1F338}';
         const defaultMessage = `${e_flower} Hola Pétalos Dorados, visité su web y me gustaría más información sobre sus arreglos ${e_flower}`;
-        // Forzamos el mensaje nuevo ignorando el de la BD por ahora para asegurar el cambio
         const message = encodeURIComponent(defaultMessage);
         window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`, '_blank');
     };
@@ -25,7 +24,7 @@ export default function WhatsAppButton() {
             className="fixed bottom-6 right-6 z-50 p-4 bg-[#25D366] text-white rounded-full shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:scale-110 hover:shadow-[0_6px_20px_rgba(37,211,102,0.23)] transition-all duration-300 flex items-center justify-center animate-bounce-subtle group"
             aria-label="Contactar por WhatsApp"
         >
-            {/* WhatsApp SVG Icon for authenticity */}
+
             <svg
                 viewBox="0 0 24 24"
                 width="32"

@@ -6,7 +6,6 @@ import { Phone, MapPin, Clock, Facebook, Instagram, Send, MessageSquare, Truck }
 import toast from 'react-hot-toast';
 
 export default function Contacto() {
-    // Consume Global Context
     const { business: negocio, isShopLoading: loading } = useCart();
 
     const [formData, setFormData] = useState({
@@ -34,7 +33,6 @@ export default function Contacto() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Trim inputs to remove accidental whitespace
         const nombre = formData.nombre.trim();
         const celular = formData.celular.trim();
         const mensaje = formData.mensaje.trim();
@@ -44,19 +42,16 @@ export default function Contacto() {
             return;
         }
 
-        // Validación estricta: exactamente 9 dígitos y empezar con 9
         if (celular.length !== 9 || celular[0] !== '9') {
             toast.error('El celular debe tener 9 dígitos y empezar con 9');
             return;
         }
 
-        // Si no hay datos del negocio cargados aún, mostramos error pero más descriptivo
         if (!negocio?.celular_whatsapp) {
             toast.error('Error de conexión: No se pudo obtener el número de la tienda. Intenta recargar.');
             return;
         }
 
-        // Emojis using ES6 Unicode Escapes
         const e_flower = '\u{1F338}';
         const e_user = '\u{1F464}';
         const e_phone = '\u{1F4F1}';
@@ -78,7 +73,6 @@ export default function Contacto() {
 
             <main className="flex-grow">
 
-                {/* 1. Hero / Header Section - Aligned with Categorias.jsx */}
                 <section className="pt-10 md:pt-[2.5rem] pb-4 md:pb-6 text-center max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
                     <span className="inline-block py-1 px-3 rounded-full bg-pink-100 text-[#BE185D] text-xs font-bold tracking-widest uppercase mb-2">
                         Estamos para servirte
@@ -106,7 +100,6 @@ export default function Contacto() {
                             <p className="text-lg md:text-xl font-bold text-[#BE185D] font-mono">{negocio?.celular_whatsapp || 'Cargando...'}</p>
                         </div>
 
-                        {/* Card 2: Location */}
                         <div className="bg-white p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 flex flex-col items-center text-center group">
                             <div className="w-14 h-14 md:w-16 md:h-16 bg-pink-50 rounded-2xl flex items-center justify-center text-[#BE185D] group-hover:bg-[#BE185D] group-hover:text-white transition-colors mb-4 md:mb-6">
                                 <MapPin size={24} className="md:w-7 md:h-7" />
@@ -124,7 +117,6 @@ export default function Contacto() {
                             </div>
                         </div>
 
-                        {/* Card 3: Hours */}
                         <div className="bg-white p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 flex flex-col items-center text-center group">
                             <div className="w-14 h-14 md:w-16 md:h-16 bg-pink-50 rounded-2xl flex items-center justify-center text-[#BE185D] group-hover:bg-[#BE185D] group-hover:text-white transition-colors mb-4 md:mb-6">
                                 <Clock size={24} className="md:w-7 md:h-7" />
@@ -138,7 +130,6 @@ export default function Contacto() {
                     {/* 3. Main Split Section: Form & Map */}
                     <div className="bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[600px]">
 
-                        {/* Left: Form */}
                         <div className="lg:w-1/2 p-6 md:p-16 flex flex-col justify-center">
                             <div className="mb-8 md:mb-10">
                                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Envíanos un Mensaje</h2>
@@ -194,7 +185,6 @@ export default function Contacto() {
                             </form>
                         </div>
 
-                        {/* Right: Map (Full Height Coverage) */}
                         <div className="lg:w-1/2 relative bg-gray-100 min-h-[400px] lg:min-h-full">
                             <iframe
                                 src={`https://maps.google.com/maps?q=${encodeURIComponent((negocio?.ubicacion || '') + ', Lambayeque')}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
@@ -208,7 +198,6 @@ export default function Contacto() {
                                 className="absolute inset-0 filter grayscale hover:grayscale-0 transition-all duration-700"
                             ></iframe>
 
-                            {/* Overlay Card on Map (Socials) */}
 
                         </div>
 

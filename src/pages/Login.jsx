@@ -14,10 +14,8 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
 
-    // Artificial delay to prevent timing attacks and brute force (2 seconds minimum)
     const minDelay = new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Intentamos iniciar sesión en Supabase
     const authPromise = supabase.auth.signInWithPassword({
       email,
       password,
@@ -38,15 +36,12 @@ export default function Login() {
   return (
     <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-gray-900">
 
-      {/* Ambient Splashes (Optional subtle details to not ensure it's too boring) */}
       <div className="absolute top-0 -left-20 w-72 h-72 bg-pink-600/20 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-0 -right-20 w-72 h-72 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none"></div>
 
-      {/* Floating Glass Card */}
       <div className="relative z-10 w-full max-w-md px-4 animate-fade-in-up">
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 md:p-10 rounded-[2.5rem] shadow-2xl">
 
-          {/* Header / Logo */}
           <div className="text-center mb-10">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-pink-500/20 rounded-full mb-4 backdrop-blur-sm border border-pink-500/30 shadow-[0_0_30px_rgba(236,72,153,0.3)]">
               <Flower size={40} className="text-pink-300 drop-shadow-md" />
@@ -56,7 +51,6 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
-            {/* Email Input */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-300 ml-1">Correo Electrónico</label>
               <div className="relative group">
@@ -69,12 +63,11 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all hover:bg-gray-900/70"
-                  placeholder="admin@petalosdorados.com"
+                  placeholder="admin@empresa.com"
                 />
               </div>
             </div>
 
-            {/* Password Input */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-300 ml-1">Contraseña</label>
               <div className="relative group">
@@ -92,7 +85,6 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
@@ -107,7 +99,6 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Back Link */}
           <div className="mt-8 text-center">
             <Link to="/" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors group">
               <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
@@ -116,7 +107,6 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Footer Text */}
         <p className="text-center text-gray-700 text-xs mt-8">
           &copy; {new Date().getFullYear()} Pétalos Dorados. Panel Administrativo.
         </p>

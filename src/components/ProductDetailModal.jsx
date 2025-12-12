@@ -7,9 +7,6 @@ export default function ProductDetailModal({ product, onClose }) {
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
 
-    // ... code ...
-
-    // Prevent background scrolling when modal is open
     useEffect(() => {
         if (product) {
             document.body.style.overflow = 'hidden';
@@ -41,7 +38,7 @@ export default function ProductDetailModal({ product, onClose }) {
             try {
                 await navigator.share(shareData);
             } catch (err) {
-                // Silently handle share errors
+
             }
         } else {
             navigator.clipboard.writeText(window.location.href);

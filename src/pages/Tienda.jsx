@@ -9,14 +9,12 @@ import Footer from '../components/Footer';
 import { Gift, Sparkles, Flower2, ChevronLeft, ChevronRight, Clock, Heart, ArrowRight } from 'lucide-react';
 import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/image';
 
-const DEFAULT_CATEGORY_IMAGE = getOptimizedUnsplashUrl('https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80', { width: 500 });
+const DEFAULT_CATEGORY_IMAGE = '';
 
 export default function Tienda() {
-  // Consume Global Context
   const { products: productos, categories: categorias, isShopLoading: loading } = useCart();
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Hero Carousel State
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const heroImages = [
     "/banner/rosasGlobo.webp",
@@ -29,12 +27,11 @@ export default function Tienda() {
       setCurrentHeroSlide((prev) => (prev + 1) % heroImages.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [heroImages.length]); // Added dependency for safety, though constant in this specific generic case
+  }, [heroImages.length]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
 
-  // Load More Logic
   const [visibleCount, setVisibleCount] = useState(8);
 
   const handleLoadMore = () => {
@@ -58,7 +55,6 @@ export default function Tienda() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Duplicate categories to create infinite scroll effect
   const extendedCategorias = [...categorias, ...categorias, ...categorias, ...categorias];
 
   const minSwipeDistance = 50;
@@ -81,7 +77,6 @@ export default function Tienda() {
 
   const nextSlide = () => {
     setCurrentSlide(prev => {
-      // Loop back only if significantly far
       if (prev + 1 >= extendedCategorias.length - itemsPerPage) {
         return 0;
       }
@@ -95,13 +90,20 @@ export default function Tienda() {
     );
   };
 
-  if (loading) return <div className="h-screen flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div></div>;
+  if (loading) return (
+    <div className="h-screen flex flex-col items-center justify-center bg-white">
+      <div className="text-center mb-8 animate-pulse">
+        <p className="text-gray-400 text-xs md:text-sm tracking-[0.5em] uppercase mb-2 font-['Playfair_Display'] italic">Florería</p>
+        <h2 className="text-3xl md:text-4xl font-extrabold text-pink-600 tracking-tight font-['Playfair_Display']">Pétalos Dorados</h2>
+      </div>
+      <div className="animate-spin rounded-full h-10 w-10 border-4 border-pink-100 border-t-pink-600"></div>
+    </div>
+  );
 
   return (
     <div className="font-sans bg-gray-50">
       <Navbar />
 
-      {/* 1. HERO SECTION */}
       <header className="relative w-full lg:min-h-screen bg-gray-50 flex lg:items-center pt-8 md:pt-6 lg:pt-10 pb-12 md:pb-16 lg:pb-20 overflow-hidden">
 
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-pink-100/30 rounded-full blur-3xl pointer-events-none" />
@@ -121,7 +123,6 @@ export default function Tienda() {
               Cada uno de nuestros arreglos está pensado para acompañar tus momentos especiales con elegancia y frescura.
             </p>
 
-            {/* Mobile Only Hero Image Carousel */}
             <div className="block md:hidden relative z-10 mb-8 flex flex-col items-center">
               <div className="relative rounded-[1.5rem] overflow-hidden shadow-lg border-4 border-white transform -rotate-2 w-64 h-64 bg-gray-100">
                 {heroImages.map((img, index) => (
@@ -129,11 +130,10 @@ export default function Tienda() {
                     key={index}
                     src={img}
                     alt="Flores en exhibición"
-                    fetchpriority={index === 0 ? 'high' : 'low'}
+                    fetchPriority={index === 0 ? 'high' : 'low'}
                     className={`absolute inset-0 w-full h-full object-cover rounded-[1.2rem] transition-opacity duration-[1500ms] ease-in-out ${currentHeroSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                   />
                 ))}
-                {/* Mobile Slider Indicators - Inside Image */}
                 <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
                   {heroImages.map((_, index) => (
                     <button
@@ -162,11 +162,10 @@ export default function Tienda() {
                     key={index}
                     src={img}
                     alt="Flores en exhibición"
-                    fetchpriority={index === 0 ? 'high' : 'low'}
+                    fetchPriority={index === 0 ? 'high' : 'low'}
                     className={`absolute inset-0 w-full h-full object-cover rounded-[2rem] transition-opacity duration-[1500ms] ease-in-out ${currentHeroSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                   />
                 ))}
-                {/* Desktop Slider Indicators */}
                 <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
                   {heroImages.map((_, index) => (
                     <button
@@ -177,7 +176,6 @@ export default function Tienda() {
                   ))}
                 </div>
               </div>
-              {/* Restored Secondary Floating Image */}
               <div className="absolute -bottom-12 -left-12 w-64 h-48 rounded-2xl overflow-hidden shadow-xl border-4 border-white z-20 animate-float">
                 <img src="/banner/gira.webp" alt="Detalle flores" className="w-full h-full object-cover" />
               </div>
@@ -186,21 +184,18 @@ export default function Tienda() {
         </div>
       </header>
 
-      {/* 2. SECCIÓN CATEGORÍAS */}
       <section id="categorias" className="scroll-mt-40 py-8 md:py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Explora las Categorías</h2>
             <div className="w-24 h-1.5 bg-pink-600 mx-auto rounded-full mt-6"></div>
           </div>
-          {/* Carousel Container */}
           <div
             className="relative group"
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            {/* Side Navigation Arrows (Small & Discrete) */}
             <button
               onClick={prevSlide}
               className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-white/90 shadow-md text-pink-600 hover:bg-pink-50 hover:scale-105 transition-all opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
@@ -226,12 +221,16 @@ export default function Tienda() {
                     style={{ width: `${100 / itemsPerPage}%` }}
                   >
                     <Link to={`/categorias#${cat.nombre.toLowerCase().replace(/ /g, '-')}`} className="block group/card h-full">
-                      <div className="relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-lg group-hover/card:shadow-2xl transition-all duration-500">
-                        <img
-                          src={getOptimizedCloudinaryUrl(cat.imagen_url, { width: 400 }) || DEFAULT_CATEGORY_IMAGE}
-                          alt={cat.nombre}
-                          className="w-full h-full object-cover transform group-hover/card:scale-110 transition-transform duration-500"
-                        />
+                      <div className="relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-lg group-hover/card:shadow-2xl transition-all duration-500 bg-gray-100 flex items-center justify-center">
+                        {getOptimizedCloudinaryUrl(cat.imagen_url, { width: 400 }) ? (
+                          <img
+                            src={getOptimizedCloudinaryUrl(cat.imagen_url, { width: 400 })}
+                            alt={cat.nombre}
+                            className="w-full h-full object-cover transform group-hover/card:scale-110 transition-transform duration-500"
+                          />
+                        ) : (
+                          <span className="text-gray-300 text-6xl">🌸</span>
+                        )}
                         <div className="absolute inset-0 bg-black bg-opacity-40 group-hover/card:bg-opacity-50 transition-all duration-300 flex items-end p-6">
                           <h3 className="text-white text-2xl font-bold tracking-tight">{cat.nombre}</h3>
                         </div>
@@ -241,20 +240,16 @@ export default function Tienda() {
                 ))}
               </div>
             </div>
-            {/* View All Categories Button */}
-            {categorias.length > itemsPerPage && (
-              <div className="text-center mt-8">
-                <Link to="/categorias" className="inline-flex items-center justify-center gap-2 bg-pink-700 text-white px-8 py-3 rounded-full font-bold hover:bg-pink-100 hover:text-pink-800 transition-all group shadow-sm hover:shadow-md">
-                  Ver todas las categorías
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            )}
+            <div className="text-center mt-8">
+              <Link to="/categorias" className="inline-flex items-center justify-center gap-2 bg-pink-600 text-white px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all group">
+                Explorar todas las categorías
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 3. PRODUCTOS DESTACADOS */}
       <section id="destacados" className="scroll-mt-40 pt-4 pb-4 md:pt-10 md:pb-8 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -269,12 +264,11 @@ export default function Tienda() {
             ))}
           </div>
 
-          {/* Load More Button */}
           {visibleCount < productos.length && (
             <div className="flex justify-center mt-12 mb-14">
               <button
                 onClick={handleLoadMore}
-                className="bg-pink-600 text-white px-8 py-3 rounded-full font-bold shadow-md hover:shadow-lg hover:bg-pink-700 transition-all flex items-center gap-2 group"
+                className="bg-pink-600 text-white px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all flex items-center gap-2 group"
               >
                 Ver más productos
                 <Flower2 size={20} className="group-hover:rotate-45 transition-transform duration-300" />
@@ -284,7 +278,6 @@ export default function Tienda() {
         </div>
       </section>
 
-      {/* 3.5 FEATURES SECTION (New Location) */}
       <section className="pt-0 pb-24 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealOnScroll variant="up">
@@ -335,10 +328,8 @@ export default function Tienda() {
         </div>
       </section>
 
-      {/* 4. FOOTER */}
       <Footer />
 
-      {/* Product Detail Modal */}
       {selectedProduct && (
         <ProductDetailModal
           product={selectedProduct}
