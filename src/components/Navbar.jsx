@@ -2,19 +2,18 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingCart, Flower, Phone, MapPin, ChevronDown, ChevronRight, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import SocialIcon from './SocialIcon'; // <-- 1. Import SocialIcon
+import SocialIcon from './SocialIcon';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
 
-  // Consume Global Context
-  const { cartCount, openCart, business: negocio, categories: categorias, redes } = useCart(); // <-- 2. Consume `redes`
+  const { cartCount, openCart, business: negocio, categories: categorias, redes } = useCart();
   const location = useLocation();
 
   useLayoutEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); // Synchronous instant scroll
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [location.pathname]);
 
   useEffect(() => {
@@ -23,7 +22,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -43,7 +41,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* TOP BAR */}
       <div className="hidden md:block bg-[#BE185D] text-white py-2 md:py-3 relative z-50 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-xs font-medium gap-2 md:gap-0">
           <div className="flex items-center gap-4 md:gap-6 overflow-x-auto w-full md:w-auto justify-center md:justify-start pb-1 md:pb-0 scrollbar-hide">
@@ -63,7 +60,6 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             <span className="text-pink-200">Síguenos:</span>
             <div className="flex items-center gap-3">
-              {/* 3. Dynamic social links for desktop */}
               {redes.map(red => (
                 <a key={red.nombre} href={red.url} target="_blank" rel="noopener noreferrer" aria-label={red.nombre} className="hover:text-pink-200 transition-colors">
                   <SocialIcon name={red.nombre} size={14} />
@@ -74,12 +70,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* MAIN NAVBAR */}
       <nav className={`sticky top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? 'bg-white/95 shadow-md py-2 backdrop-blur-md' : 'bg-white py-4 shadow-sm'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
 
-          {/* LOGO & MENU BUTTON GROUP */}
-          {/* MOBILE MENU BUTTON - MOVED TO LEFT */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Cerrar menú principal" : "Abrir menú principal"}
@@ -88,7 +81,6 @@ export default function Navbar() {
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          {/* LOGO */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="bg-pink-50 p-2 rounded-full group-hover:bg-pink-100 transition-colors">
               <Flower size={24} className="text-[#BE185D]" />
@@ -103,7 +95,6 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => {
               if (link.hasDropdown) {
@@ -117,7 +108,6 @@ export default function Navbar() {
                       <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
                     </Link>
 
-                    {/* Dropdown Menu */}
                     <div className="absolute top-full left-0 w-56 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                       <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
                         {categorias.length > 0 ? (
@@ -151,9 +141,7 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* ACTIONS */}
           <div className="flex items-center gap-3">
-            {/* CART ICON */}
             <button
               onClick={openCart}
               aria-label={`Ver carrito de compras con ${cartCount} productos`}
@@ -170,14 +158,11 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* MOBILE MENU DRAWER */}
-      {/* Overlay */}
       <div
         className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 md:hidden ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setIsOpen(false)}
       />
 
-      {/* Drawer */}
       <div className={`fixed top-0 left-0 z-[70] w-72 h-full bg-white shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -218,7 +203,6 @@ export default function Navbar() {
                     </button>
                   </div>
 
-                  {/* Mobile Submenu */}
                   <div className={`overflow-hidden transition-all duration-300 ${mobileCategoriesOpen ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
                     <div className="flex flex-col gap-2 pl-4 border-l-2 border-pink-100 ml-1">
                       {categorias.map(cat => (
@@ -249,7 +233,6 @@ export default function Navbar() {
             );
           })}
 
-          {/* 4. Dynamic social links for mobile */}
           <div className="mt-8 pt-6">
             <p className="text-sm font-bold text-gray-500 mb-4">Síguenos:</p>
             <div className="flex items-center gap-4">

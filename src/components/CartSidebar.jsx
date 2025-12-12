@@ -1,28 +1,27 @@
 import { useState, useEffect } from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, Loader2, MessageSquare, CircleDollarSign } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { supabase } from '../supabase'; // 1. Importar Supabase
 import toast from 'react-hot-toast';
 
 export default function CartSidebar() {
     const { isCartOpen, closeCart, cartItems, removeFromCart, addToCart, decreaseQuantity, clearCart, business } = useCart();
-    const [isLoading, setIsLoading] = useState(false); // 2. Estado de carga
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [view, setView] = useState('cart'); // 'cart' | 'checkout'
+    const [view, setView] = useState('cart');
     const [formData, setFormData] = useState({
         name: '',
-        deliveryType: '', // 'delivery', 'recojo'
+        deliveryType: '',
         date: '',
         time: '',
         phone: '',
         address: '',
-        district: '', // New field
+        district: '',
         dedication: '',
         observation: ''
     });
     const [errors, setErrors] = useState({});
 
-    // Reset view when closing
+
     useEffect(() => {
         if (!isCartOpen) {
             setView('cart');
@@ -30,7 +29,7 @@ export default function CartSidebar() {
         }
     }, [isCartOpen]);
 
-    // Lock body scroll when cart is open
+
     useEffect(() => {
         if (isCartOpen) {
             document.body.style.overflow = 'hidden';
@@ -97,7 +96,7 @@ export default function CartSidebar() {
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
     };
 
-    // 3. Lógica del Checkout
+
     const processOrder = async () => {
         if (!validateForm()) {
             toast.error('Por favor completa los campos requeridos');
@@ -108,12 +107,12 @@ export default function CartSidebar() {
         const loadingToast = toast.loading('Preparando tu pedido...');
 
         try {
-            // Usamos el negocio del contexto para consistencia y rapidez
+
             if (!business?.celular_whatsapp) {
                 throw new Error('El número de WhatsApp no está configurado en el sistema.');
             }
 
-            // Limpiamos el número para evitar errores (solo dígitos)
+
             let whatsappNumber = business.celular_whatsapp.replace(/\D/g, '');
 
             // Agregamos código de país Perú (51) si tiene 9 dígitos
@@ -121,12 +120,11 @@ export default function CartSidebar() {
                 whatsappNumber = `51${whatsappNumber}`;
             }
 
-            // Si después de limpiar no queda nada o es muy corto, alerta
+
             if (whatsappNumber.length < 9) {
                 throw new Error('El número de la tienda parece inválido. Contáctanos por redes sociales.');
             }
 
-            // Emojis using ES6 Unicode Code Point Escapes (Safe & Robust)
             const e_flower = '\u{1F338}';
             const e_user = '\u{1F464}';
             const e_date = '\u{1F4C5}';
@@ -143,7 +141,7 @@ export default function CartSidebar() {
             const e_bill = '\u{1F4B5}';
             const e_pic = '\u{1F5BC}';
 
-            // Construir el mensaje del pedido
+
             let itemsText = cartItems.map(item =>
                 `${e_square} *${item.nombre}* (x${item.quantity})\n   ${e_bill} S/. ${(item.precio * item.quantity).toFixed(2)}\n   ${e_pic} Ver foto: ${item.imagen_url}`
             ).join('\n\n');
@@ -151,8 +149,7 @@ export default function CartSidebar() {
             const deliveryText = formData.deliveryType === 'delivery' ? `${e_moto} *Envío a Domicilio*` : `${e_store} *Recojo en Tienda*`;
             const timeLabel = formData.deliveryType === 'delivery' ? 'Hora de Entrega' : 'Hora de Recojo';
 
-            // Conditional fields for Delivery
-            // Distrito emoji: 🏘️ (\u{1F3D8})
+
             const addressLine = formData.deliveryType === 'delivery' ? `\n${e_pin} *Dirección:* ${formData.address}\n\u{1F3D8} *Distrito:* ${formData.district}` : '';
             const phoneLine = formData.deliveryType === 'delivery' ? `\n${e_phone} *Teléfono Extra:* ${formData.phone}` : '';
 
@@ -163,7 +160,7 @@ export default function CartSidebar() {
             toast.dismiss(loadingToast);
             toast.success('Redirigiendo a WhatsApp...');
 
-            // Redireccionar
+
             window.open(whatsappUrl, '_blank');
 
         } catch (err) {
@@ -209,7 +206,7 @@ export default function CartSidebar() {
                     <div className="flex-1 overflow-y-auto p-6 bg-gray-50/30">
                         {view === 'checkout' ? (
                             <div className="space-y-6 animate-fade-in">
-                                {/* Client Name */}
+
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">🙋 Tu Nombre <span className="text-pink-500">*</span></label>
                                     <input
@@ -223,7 +220,7 @@ export default function CartSidebar() {
                                     {errors.name && <p className="text-red-500 text-xs mt-1 ml-1">{errors.name}</p>}
                                 </div>
 
-                                {/* Delivery Type */}
+
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Tipo de Entrega <span className="text-pink-500">*</span></label>
                                     <select
@@ -239,7 +236,6 @@ export default function CartSidebar() {
                                     {errors.deliveryType && <p className="text-red-500 text-xs mt-1 ml-1">{errors.deliveryType}</p>}
                                 </div>
 
-                                {/* District Field (Moved up for UX flow) */}
                                 {formData.deliveryType === 'delivery' && (
                                     <div className="animate-fade-in">
                                         <label className="block text-sm font-bold text-gray-700 mb-2">🏘️ Distrito de Envío <span className="text-pink-500">*</span></label>
@@ -269,7 +265,7 @@ export default function CartSidebar() {
                                         <input
                                             type="date"
                                             name="date"
-                                            required // Needed for :invalid pseudo-class
+                                            required
                                             min={new Date().toLocaleDateString('en-CA')}
                                             value={formData.date}
                                             onChange={handleInputChange}
@@ -301,25 +297,24 @@ export default function CartSidebar() {
                                                     { label: "5:00 PM - 6:00 PM", startHour: 17 }
                                                 ];
 
-                                                // Get 'today' in YYYY-MM-DD format based on local time
+
                                                 const today = new Date();
-                                                const todayStr = today.toLocaleDateString('en-CA'); // YYYY-MM-DD
+                                                const todayStr = today.toLocaleDateString('en-CA'); // 
                                                 const currentHour = today.getHours();
 
                                                 return timeSlots.filter(slot => {
-                                                    // 1. Restriction for Chiclayo and Lambayeque (Only afternoon)
+
                                                     const restrictedDistricts = ['Chiclayo', 'Lambayeque'];
                                                     if (restrictedDistricts.includes(formData.district)) {
-                                                        // "Apartir de la 1 hacia las 6" -> Start hour >= 13
                                                         if (slot.startHour < 13) return false;
                                                     }
 
-                                                    // 2. Restriction for "Today" (Hide past hours)
+
                                                     if (formData.date === todayStr) {
                                                         return slot.startHour > currentHour;
                                                     }
 
-                                                    // Otherwise show all
+
                                                     return true;
                                                 }).map(slot => (
                                                     <option key={slot.label} value={slot.label}>{slot.label}</option>
@@ -330,7 +325,7 @@ export default function CartSidebar() {
                                     </div>
                                 </div>
 
-                                {/* Delivery fields (Address & Phone) */}
+
                                 {formData.deliveryType === 'delivery' && (
                                     <div className="space-y-4 animate-fade-in">
 
@@ -375,7 +370,7 @@ export default function CartSidebar() {
                                     ></textarea>
                                 </div>
 
-                                {/* Additional Notes */}
+
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">📝 Instrucciones Adicionales</label>
                                     <textarea
@@ -394,7 +389,7 @@ export default function CartSidebar() {
                                 </div>
                             </div>
                         ) : (
-                            // CART VIEW
+
                             <>
                                 {cartItems.length === 0 ? (
                                     <div className="h-full flex flex-col items-center justify-center text-center">

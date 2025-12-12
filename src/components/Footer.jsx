@@ -9,10 +9,9 @@ export default function Footer() {
   const navLinks = [
     { name: 'Inicio', path: '/' },
     { name: 'Colección', path: '/categorias' },
-    { name: 'Contáctanos', path: '/#contacto' },
+    { name: 'Contáctanos', path: '/contacto' },
   ];
 
-  // Get top 5 categories for the footer
   const footerCategories = categories ? categories.slice(0, 5) : [];
 
   return (
@@ -20,7 +19,6 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
 
-          {/* Columna 1: Marca y Redes (Full Width Mobile) */}
           <div className="col-span-2 lg:col-span-1 space-y-4 md:space-y-6 flex flex-col items-center lg:items-start text-center lg:text-left">
             <RouterLink to="/" className="flex items-center gap-3 group w-fit">
               <div className="bg-white/10 p-2.5 rounded-full group-hover:bg-white/20 transition-colors backdrop-blur-sm">
@@ -39,7 +37,8 @@ export default function Footer() {
               Creamos arreglos florales únicos que expresan tus sentimientos más profundos.
             </p>
 
-            {/* Redes Sociales */}
+
+
             <div className="w-full flex flex-col items-center lg:items-start">
               <h4 className="font-bold text-pink-200 text-sm uppercase tracking-wider mb-3">Síguenos</h4>
               <div className="flex gap-4">
@@ -59,7 +58,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Columna 2: Enlaces Rápidos (Half Width Mobile) */}
           <div className="col-span-1">
             <h3 className="text-lg font-bold text-white mb-4 md:mb-6 relative inline-block">
               Explorar
@@ -80,7 +78,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Columna 3: Categorías Populares (Half Width Mobile) */}
           <div className="col-span-1">
             <h3 className="text-lg font-bold text-white mb-4 md:mb-6 relative inline-block">
               Categorías
@@ -109,7 +106,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Columna 4: Contacto (Full Width Mobile) */}
           <div className="col-span-2 lg:col-span-1 mt-4 lg:mt-0">
             <h3 className="text-lg font-bold text-white mb-4 md:mb-6 relative inline-block">
               Contáctanos
@@ -140,7 +136,6 @@ export default function Footer() {
 
         </div>
 
-        {/* Copyright */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-center items-center gap-4">
           <p className="text-sm text-pink-100/60 text-center">
             © {new Date().getFullYear()} {negocio?.nombre_tienda || 'Florería'}. Todos los derechos reservados.

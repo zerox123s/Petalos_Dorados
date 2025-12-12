@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,48 +8,57 @@
   html {
     scroll-behavior: smooth;
   }
-  
+
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
   }
+
   ::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
+
   ::-webkit-scrollbar-thumb {
     background: #BE185D;
     border-radius: 4px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: #9d174d;
   }
 
-  /* Date Input Placeholder Hack for Mobile */
+  /* Global Date Input Styles */
   input[type="date"] {
-    position: relative;
-    padding-right: 20px; /* Space for the calendar icon */
-  }
-  
-  /* When valid (has value), show standard text color */
-  input[type="date"]:valid {
-    color: inherit;
+    cursor: pointer;
   }
 
-  /* When invalid (empty/required), show transparent text but visible pseudo-element */
-  input[type="date"]:invalid::-webkit-datetime-edit {
-    color: transparent;
-  }
-  
-  input[type="date"]:focus::-webkit-datetime-edit {
-    color: black !important;
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
   }
 
-  input[type="date"]:invalid:before {
-    content: attr(placeholder);
-    position: absolute;
-    left: 1rem; /* Match px-4 */
-    color: #9ca3af; /* gray-400 */
-    pointer-events: none;
+  @media (max-width: 768px) {
+
+    /* Date Input Placeholder Hack for Mobile Only */
+    input[type="date"] {
+      position: relative;
+      padding-right: 20px;
+    }
+
+    input[type="date"]:invalid::-webkit-datetime-edit {
+      color: transparent;
+    }
+
+    input[type="date"]:focus::-webkit-datetime-edit {
+      color: black !important;
+    }
+
+    input[type="date"]:invalid:before {
+      content: attr(placeholder);
+      position: absolute;
+      left: 1rem;
+      color: #9ca3af;
+      pointer-events: none;
+    }
   }
 }
 
@@ -55,7 +66,7 @@
   .animate-slide-in-right {
     animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  
+
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
   }
@@ -63,7 +74,7 @@
   .animate-fade-in-up {
     animation: fadeInUp 0.8s ease-out forwards;
   }
-  
+
   .animate-bounce-subtle {
     animation: bounceSubtle 2s infinite;
   }
@@ -76,6 +87,7 @@
     from {
       transform: translateX(100%);
     }
+
     to {
       transform: translateX(0);
     }
@@ -85,6 +97,7 @@
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -95,17 +108,21 @@
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  
+
   @keyframes bounceSubtle {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: translateY(-5%);
       animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
     }
+
     50% {
       transform: translateY(0);
       animation-timing-function: cubic-bezier(0, 0, 0.2, 1);

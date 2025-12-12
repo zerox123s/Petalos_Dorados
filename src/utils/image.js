@@ -7,7 +7,7 @@
  * @param {number} [options.width] - The target width of the image.
  * @param {number} [options.height] - The target height of the image.
  * @param {string} [options.crop='fill'] - The crop mode (e.g., 'fill', 'fit', 'limit').
- * @returns {string} The new URL with optimization and resize parameters.
+ * @returns {string} 
  */
 export const getOptimizedCloudinaryUrl = (originalUrl, { width, height, crop = 'fill' }) => {
   if (!originalUrl || !originalUrl.includes('cloudinary.com')) {
@@ -15,8 +15,8 @@ export const getOptimizedCloudinaryUrl = (originalUrl, { width, height, crop = '
   }
 
   const transformations = [
-    'f_auto', // Auto format
-    'q_auto', // Auto quality
+    'f_auto',
+    'q_auto',
   ];
 
   if (width) transformations.push(`w_${width}`);
@@ -25,7 +25,7 @@ export const getOptimizedCloudinaryUrl = (originalUrl, { width, height, crop = '
 
   const transformationString = transformations.join(',');
 
-  // The structure is: https://res.cloudinary.com/<cloud_name>/image/upload/<transformations>/<public_id>
+
   return originalUrl.replace('/upload/', `/upload/${transformationString}/`);
 };
 
@@ -45,12 +45,12 @@ export const getOptimizedUnsplashUrl = (originalUrl, { width, height, quality = 
   }
 
   const url = new URL(originalUrl);
-  
+
   if (width) url.searchParams.set('w', width);
   if (height) url.searchParams.set('h', height);
   if (quality) url.searchParams.set('q', quality);
   if (autoFormat) url.searchParams.set('auto', 'format');
-  
+
   // Ensures the base URL is clean before adding params
   const baseUrl = url.origin + url.pathname;
   return `${baseUrl}?${url.searchParams.toString()}`;

@@ -8,7 +8,7 @@ import ProductDetailModal from '../components/ProductDetailModal';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/image';
 
-const DEFAULT_CATEGORY_IMAGE = getOptimizedUnsplashUrl('https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&q=80', { width: 500 });
+const DEFAULT_CATEGORY_IMAGE = '';
 
 const CATEGORY_DESCRIPTIONS = {
   'arreglo-flores': 'Diseños florales únicos para embellecer cualquier espacio con frescura y elegancia.',
@@ -19,54 +19,54 @@ const CATEGORY_DESCRIPTIONS = {
 };
 
 const CategoryOverviewCard = ({ category }) => {
-    const categoryHash = category.nombre.toLowerCase().replace(/ /g, '-');
-    const imageUrl = getOptimizedCloudinaryUrl(category.imagen_url, { width: 500 }) || DEFAULT_CATEGORY_IMAGE;
+  const categoryHash = category.nombre.toLowerCase().replace(/ /g, '-');
+  const imageUrl = getOptimizedCloudinaryUrl(category.imagen_url, { width: 500 }) || DEFAULT_CATEGORY_IMAGE;
 
-    return (
-        <Link to={`/categorias#${categoryHash}`} className="block group">
-            <div className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-transparent hover:border-pink-200">
-                <div className="relative h-56 w-full overflow-hidden">
-                    <img
-                        src={imageUrl}
-                        alt={category.nombre}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-                </div>
-                <div className="p-5 text-center">
-                    <h3 className="text-xl font-bold text-gray-800 transition-colors">
-                        {category.nombre}
-                    </h3>
-                    <p className="text-gray-500 text-sm mt-2 line-clamp-2 h-10">
-                        {CATEGORY_DESCRIPTIONS[categoryHash] || CATEGORY_DESCRIPTIONS['default']}
-                    </p>
-                    <div className="mt-4">
-                        <span className="inline-block text-pink-600 font-semibold text-sm group-hover:underline">
-                            Ver productos &rarr;
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </Link>
-    );
+  return (
+    <Link to={`/categorias#${categoryHash}`} className="block group">
+      <div className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-transparent hover:border-pink-200">
+        <div className="relative h-56 w-full overflow-hidden bg-gray-100 flex items-center justify-center">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={category.nombre}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          ) : (
+            <span className="text-gray-300 text-4xl">🌸</span>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+        </div>
+        <div className="p-5 text-center">
+          <h3 className="text-xl font-bold text-gray-800 transition-colors">
+            {category.nombre}
+          </h3>
+          <p className="text-gray-500 text-sm mt-2 line-clamp-2 h-10">
+            {CATEGORY_DESCRIPTIONS[categoryHash] || CATEGORY_DESCRIPTIONS['default']}
+          </p>
+          <div className="mt-4">
+            <span className="inline-block text-pink-600 font-semibold text-sm group-hover:underline">
+              Ver productos &rarr;
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
 };
 
 export default function Categorias() {
-  // Consume Global Context
   const { categories: categorias, products: productos, isShopLoading: loading } = useCart();
 
-  // Modal State
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const location = useLocation();
 
-  // Instant Scroll on Hash Change (Filter)
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [location.hash]);
 
-  // Filter Logic
   const activeHash = location.hash.replace('#', '');
   const displayedCategorias = activeHash
     ? categorias.filter(cat => cat.nombre.toLowerCase().replace(/ /g, '-') === activeHash)
@@ -78,7 +78,6 @@ export default function Categorias() {
     ? (CATEGORY_DESCRIPTIONS[activeHash] || CATEGORY_DESCRIPTIONS['default'])
     : "Explora cada una de nuestras categorías y encuentra el arreglo perfecto para cada ocasión.";
 
-  // Breadcrumbs Logic
   const crumbs = [
     { label: 'Inicio', link: '/' },
     { label: 'Categorías', link: currentCategory ? '/categorias' : null },
@@ -87,7 +86,6 @@ export default function Categorias() {
     crumbs.push({ label: currentCategory.nombre, link: null });
   }
 
-  // Modal Handlers
   const handleProductClick = (product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
@@ -161,7 +159,8 @@ export default function Categorias() {
 
       <Footer />
 
-      {/* Product Detail Modal */}
+
+
       <ProductDetailModal
         product={selectedProduct}
         isOpen={isModalOpen}

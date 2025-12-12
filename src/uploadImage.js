@@ -1,5 +1,4 @@
 export const uploadImage = async (file) => {
-  // Ahora leemos del archivo .env
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_PRESET;
 
@@ -17,9 +16,9 @@ export const uploadImage = async (file) => {
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
       { method: "POST", body: formData }
     );
-    
+
     if (!response.ok) throw new Error("Error subiendo imagen");
-    
+
     const data = await response.json();
     return data.secure_url;
   } catch (error) {

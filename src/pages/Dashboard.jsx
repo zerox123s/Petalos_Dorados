@@ -16,7 +16,6 @@ import ConfirmationModal from '../components/ConfirmationModal'
 
 import Configuracion from './Configuracion';
 
-// --- Componentes de UI ---
 const ImageUploadInput = ({ file, onFileChange }) => (
   <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-center hover:bg-gray-50 transition cursor-pointer relative h-full flex flex-col justify-center">
     <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={e => onFileChange(e.target.files[0])} />
@@ -83,7 +82,6 @@ export default function Dashboard() {
     if (redes) setRedesSociales(redes)
   }
 
-  // --- Handlers ---
   const handleOpenCreateProduct = () => { setProductToEdit(null); setIsProductModalOpen(true); }
   const handleOpenEditProduct = (producto) => { setProductToEdit(producto); setIsProductModalOpen(true); }
   const handleSaveProduct = async (formData) => {
@@ -125,24 +123,21 @@ export default function Dashboard() {
     cargarDatos();
   }
   const handleDeleteCategory = (id) => { setConfirmModalState({ isOpen: true, title: 'Eliminar Categoría', message: 'Cuidado: Los productos asociados quedarán sin categoría.', onConfirm: async () => { await supabase.from('categorias').delete().eq('id', id); toast.success("Categoría eliminada"); cargarDatos(); } }); }
-  
+
   const [newRedSocial, setNewRedSocial] = useState({ nombre: '', url: '' });
-  
-  // Lista predefinida de redes sociales
+
   const PREDEFINED_NETWORKS = ['TikTok', 'Facebook', 'Gmail', 'WhatsApp', 'Instagram'];
 
-  // Filtrar las redes que ya han sido agregadas
   const existingNetworkNames = redesSociales.map(rs => rs.nombre);
   const availableNetworks = PREDEFINED_NETWORKS.filter(n => !existingNetworkNames.includes(n));
 
   useEffect(() => {
-    // Si las redes disponibles cambian, actualizamos el estado del formulario para que el select tenga un valor por defecto
     if (availableNetworks.length > 0) {
       setNewRedSocial(prev => ({ ...prev, nombre: availableNetworks[0] }));
     } else {
       setNewRedSocial(prev => ({ ...prev, nombre: '' }));
     }
-  }, [redesSociales]); // Se ejecuta cada vez que las redes sociales cargadas cambian
+  }, [redesSociales]);
 
 
   const handleRedSocialChange = (id, field, value) => {
@@ -152,17 +147,17 @@ export default function Dashboard() {
   const handleAddRedSocial = async (e) => {
     e.preventDefault();
     if (!newRedSocial.nombre.trim() || !newRedSocial.url.trim()) return toast.error('Debes seleccionar una red y completar la URL.');
-    
+
     const loadingToast = toast.loading('Agregando red social...');
     try {
       const { error } = await supabase.from('redes_sociales').insert([newRedSocial]);
       if (error) throw error;
-      
+
       toast.success('Red social agregada.');
-      setNewRedSocial({ nombre: availableNetworks.length > 1 ? availableNetworks[1] : '', url: '' }); // Reset form
-      cargarDatos(); // Recargar todos los datos para reflejar el cambio
+      setNewRedSocial({ nombre: availableNetworks.length > 1 ? availableNetworks[1] : '', url: '' });
+      cargarDatos();
     } catch (error) {
-      if (error.code === '23505') { 
+      if (error.code === '23505') {
         toast.error('Ya existe una red social con ese nombre.');
       } else {
         toast.error('Error: ' + error.message);
@@ -233,7 +228,7 @@ export default function Dashboard() {
           <TabButton isActive={activeTab === 'categorias'} onClick={() => handleTabClick('categorias')} icon={<Tags size={20} />} label="Categorías" />
           <TabButton isActive={activeTab === 'config'} onClick={() => handleTabClick('config')} icon={<Settings size={20} />} label="Configuración" />
         </nav>
-                  <div className="absolute bottom-4 left-0 w-full px-4"><button onClick={async () => { await supabase.auth.signOut(); navigate('/login') }} aria-label="Cerrar sesión" className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 transition font-medium"><LogOut size={20} />Cerrar Sesión</button></div>      </aside>
+        <div className="absolute bottom-4 left-0 w-full px-4"><button onClick={async () => { await supabase.auth.signOut(); navigate('/login') }} aria-label="Cerrar sesión" className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 transition font-medium"><LogOut size={20} />Cerrar Sesión</button></div>      </aside>
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="h-16 md:h-20 bg-white/80 backdrop-blur-lg border-b flex items-center justify-between px-4 md:px-8 sticky top-0 z-20">
@@ -253,104 +248,104 @@ export default function Dashboard() {
               </div>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                 <h2 className="text-xl font-bold text-gray-700">Inventario de Productos</h2>
-                                <button onClick={handleOpenCreateProduct} aria-label="Crear nuevo producto" className="w-full md:w-auto bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 font-bold transition shadow-lg shadow-pink-200 hover:shadow-xl transform hover:-translate-y-0.5">
-                                  <Plus size={18} />Nuevo Producto
-                                </button>
+                <button onClick={handleOpenCreateProduct} aria-label="Crear nuevo producto" className="w-full md:w-auto bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 font-bold transition shadow-lg shadow-pink-200 hover:shadow-xl transform hover:-translate-y-0.5">
+                  <Plus size={18} />Nuevo Producto
+                </button>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 md:p-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Buscar por nombre..."
+                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    aria-label="Buscar productos por nombre"
+                  />
+                  <select
+                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
+                    value={selectedCategory}
+                    onChange={e => setSelectedCategory(e.target.value)}
+                    aria-label="Filtrar productos por categoría"
+                  >
+                    <option value="all">Todas las categorías</option>
+                    {categorias.map(cat => (
+                      <option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
+                    ))}
+                  </select>
+                  <select
+                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
+                    value={selectedStatus}
+                    onChange={e => setSelectedStatus(e.target.value)}
+                    aria-label="Filtrar productos por estado"
+                  >
+                    <option value="all">Todos los estados</option>
+                    <option value="visible">Visible</option>
+                    <option value="oculto">Oculto</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left simple-table">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Producto</th>
+                        <th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Categoría</th>
+                        <th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Precio</th>
+                        <th className="p-4 md:p-5 text-center text-sm font-semibold text-gray-600 whitespace-nowrap">Estado</th>
+                        <th className="p-4 md:p-5 min-w-[100px]"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {filteredProductos.map(prod => (
+                        <tr key={prod.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="p-4 md:p-5">
+                            <div className="flex items-center gap-3 md:gap-4 min-w-[200px]">
+                              <img src={getOptimizedCloudinaryUrl(prod.imagen_url, { width: 200 }) || 'https://via.placeholder.com/100'} alt={prod.nombre} className="w-12 h-12 md:w-16 md:h-16 rounded-xl object-cover flex-shrink-0 bg-gray-100" />
+                              <div>
+                                <div className="font-bold text-gray-800 text-sm md:text-base">{prod.nombre}</div>
+                                <div className="text-xs md:text-sm text-gray-700 line-clamp-1">{(prod.descripcion || '').substring(0, 40) + (prod.descripcion?.length > 40 ? '...' : '')}</div>
                               </div>
-                
-                              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 md:p-6 mb-6">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                  <input
-                                    type="text"
-                                    placeholder="Buscar por nombre..."
-                                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
-                                    value={searchTerm}
-                                    onChange={e => setSearchTerm(e.target.value)}
-                                    aria-label="Buscar productos por nombre"
-                                  />
-                                  <select
-                                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
-                                    value={selectedCategory}
-                                    onChange={e => setSelectedCategory(e.target.value)}
-                                    aria-label="Filtrar productos por categoría"
-                                  >
-                                    <option value="all">Todas las categorías</option>
-                                    {categorias.map(cat => (
-                                      <option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
-                                    ))}
-                                  </select>
-                                  <select
-                                    className="w-full border-gray-300 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-500"
-                                    value={selectedStatus}
-                                    onChange={e => setSelectedStatus(e.target.value)}
-                                    aria-label="Filtrar productos por estado"
-                                  >
-                                    <option value="all">Todos los estados</option>
-                                    <option value="visible">Visible</option>
-                                    <option value="oculto">Oculto</option>
-                                  </select>
-                                </div>
-                              </div>
-                
-                              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                                <div className="overflow-x-auto">
-                                  <table className="w-full text-left simple-table">
-                                    <thead className="bg-gray-50">
-                                      <tr>
-                                        <th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Producto</th>
-                                        <th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Categoría</th>
-                                        <th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Precio</th>
-                                        <th className="p-4 md:p-5 text-center text-sm font-semibold text-gray-600 whitespace-nowrap">Estado</th>
-                                        <th className="p-4 md:p-5 min-w-[100px]"></th>
-                                      </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-100">
-                                      {filteredProductos.map(prod => (
-                                        <tr key={prod.id} className="hover:bg-gray-50 transition-colors">
-                                          <td className="p-4 md:p-5">
-                                            <div className="flex items-center gap-3 md:gap-4 min-w-[200px]">
-                                              <img src={getOptimizedCloudinaryUrl(prod.imagen_url, { width: 200 }) || 'https://via.placeholder.com/100'} alt={prod.nombre} className="w-12 h-12 md:w-16 md:h-16 rounded-xl object-cover flex-shrink-0 bg-gray-100" />
-                                              <div>
-                                                <div className="font-bold text-gray-800 text-sm md:text-base">{prod.nombre}</div>
-                                                <div className="text-xs md:text-sm text-gray-700 line-clamp-1">{(prod.descripcion || '').substring(0, 40) + (prod.descripcion?.length > 40 ? '...' : '')}</div>
-                                              </div>
-                                            </div>
-                                          </td>
-                                          <td className="p-4 md:p-5 whitespace-nowrap"><span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">{prod.categorias?.nombre || 'N/A'}</span></td>
-                                          <td className="p-4 md:p-5 font-bold text-gray-800 whitespace-nowrap">S/. {prod.precio.toFixed(2)}</td>
-                                          <td className="p-4 md:p-5 text-center whitespace-nowrap"><button onClick={() => handleToggleStatus(prod.id, prod.activo)} aria-label={prod.activo ? `Desactivar producto ${prod.nombre}` : `Activar producto ${prod.nombre}`} className={`px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 mx-auto ${prod.activo ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>{prod.activo ? <Eye size={14} /> : <EyeOff size={14} />}{prod.activo ? 'Visible' : 'Oculto'}</button></td>
-                                            <td className="p-4 md:p-5 text-right whitespace-nowrap">
-                                              <div className="flex justify-end gap-1">
-                                                <button onClick={() => handleOpenEditProduct(prod)} aria-label={`Editar producto ${prod.nombre}`} className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-gray-100"><Edit size={18} /></button>
-                                                <button onClick={() => handleDeleteProduct(prod.id)} aria-label={`Eliminar producto ${prod.nombre}`} className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100"><Trash2 size={18} /></button>
-                                              </div>
-                                            </td>
-                                          </tr>
-                                        ))}
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </div>
-                              </div>          )}
+                            </div>
+                          </td>
+                          <td className="p-4 md:p-5 whitespace-nowrap"><span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">{prod.categorias?.nombre || 'N/A'}</span></td>
+                          <td className="p-4 md:p-5 font-bold text-gray-800 whitespace-nowrap">S/. {prod.precio.toFixed(2)}</td>
+                          <td className="p-4 md:p-5 text-center whitespace-nowrap"><button onClick={() => handleToggleStatus(prod.id, prod.activo)} aria-label={prod.activo ? `Desactivar producto ${prod.nombre}` : `Activar producto ${prod.nombre}`} className={`px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 mx-auto ${prod.activo ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>{prod.activo ? <Eye size={14} /> : <EyeOff size={14} />}{prod.activo ? 'Visible' : 'Oculto'}</button></td>
+                          <td className="p-4 md:p-5 text-right whitespace-nowrap">
+                            <div className="flex justify-end gap-1">
+                              <button onClick={() => handleOpenEditProduct(prod)} aria-label={`Editar producto ${prod.nombre}`} className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-gray-100"><Edit size={18} /></button>
+                              <button onClick={() => handleDeleteProduct(prod.id)} aria-label={`Eliminar producto ${prod.nombre}`} className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100"><Trash2 size={18} /></button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>)}
           {activeTab === 'categorias' && (
             <div className="max-w-4xl mx-auto">
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 mb-8">
-                                  <h3 className="text-xl font-bold mb-6 text-gray-800">Agregar Nueva Categoría</h3>
-                                  <form onSubmit={handleAddCategory} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                                    <div className="md:col-span-3"><label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label><input type="text" placeholder="Ej: Ramos" className="w-full border-gray-300 border rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-500" value={newCategoryData.nombre} onChange={e => setNewCategoryData({ ...newCategoryData, nombre: e.target.value })} required /></div>
-                                    <div className="md:col-span-3"><label className="block text-sm font-medium text-gray-700 mb-2">Imagen (Opcional)</label><ImageUploadInput file={newCategoryFile} onFileChange={setNewCategoryFile} /></div>
-                                    <div className="md:col-span-3 flex justify-end gap-3 mt-4"><button type="button" onClick={handleCancelAddCategory} aria-label="Cancelar adición de categoría" className="flex-1 py-3 px-5 rounded-lg border border-gray-300 text-gray-700 font-bold hover:bg-gray-100 transition">Cancelar</button><button type="submit" aria-label="Agregar categoría" className="flex-1 bg-pink-600 text-white py-3 px-5 rounded-lg font-bold hover:bg-pink-700 transition flex items-center justify-center gap-2"><Plus size={18} />Agregar Categoría</button></div>
-                                  </form>
-                                </div>
-                                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                                  <div className="overflow-x-auto">
-                                    <table className="w-full text-left simple-table">
-                                      <thead className="bg-gray-50"><tr><th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Nombre</th><th className="p-4 md:p-5 text-sm font-semibold text-gray-600 hidden md:table-cell whitespace-nowrap">Imagen</th><th className="p-4 md:p-5 min-w-[100px]"></th></tr></thead>
-                                      <tbody className="divide-y divide-gray-100">{categorias.map(cat => (<tr key={cat.id} className="hover:bg-gray-50 transition-colors"><td className="p-4 md:p-5 font-bold text-gray-800">{cat.nombre}</td><td className="p-4 md:p-5 text-gray-700 text-sm hidden md:table-cell"><img src={getOptimizedCloudinaryUrl(cat.imagen_url, { width: 200 }) || 'https://via.placeholder.com/100'} alt={cat.nombre} className="w-16 h-10 rounded-lg object-cover bg-gray-100" /></td><td className="px-4 py-4 md:px-6 text-right whitespace-nowrap flex justify-end gap-1"><button onClick={() => handleOpenEditCategory(cat)} aria-label={`Editar categoría ${cat.nombre}`} className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-gray-100"><Edit size={18} /></button><button onClick={() => handleDeleteCategory(cat.id)} aria-label={`Eliminar categoría ${cat.nombre}`} className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100"><Trash2 size={18} /></button></td></tr>))}</tbody>
-                                    </table>
-                                  </div>
-                                </div>
-                              </div>          )}
+                <h3 className="text-xl font-bold mb-6 text-gray-800">Agregar Nueva Categoría</h3>
+                <form onSubmit={handleAddCategory} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                  <div className="md:col-span-3"><label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label><input type="text" placeholder="Ej: Ramos" className="w-full border-gray-300 border rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-500" value={newCategoryData.nombre} onChange={e => setNewCategoryData({ ...newCategoryData, nombre: e.target.value })} required /></div>
+                  <div className="md:col-span-3"><label className="block text-sm font-medium text-gray-700 mb-2">Imagen (Opcional)</label><ImageUploadInput file={newCategoryFile} onFileChange={setNewCategoryFile} /></div>
+                  <div className="md:col-span-3 flex justify-end gap-3 mt-4"><button type="button" onClick={handleCancelAddCategory} aria-label="Cancelar adición de categoría" className="flex-1 py-3 px-5 rounded-lg border border-gray-300 text-gray-700 font-bold hover:bg-gray-100 transition">Cancelar</button><button type="submit" aria-label="Agregar categoría" className="flex-1 bg-pink-600 text-white py-3 px-5 rounded-lg font-bold hover:bg-pink-700 transition flex items-center justify-center gap-2"><Plus size={18} />Agregar Categoría</button></div>
+                </form>
+              </div>
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left simple-table">
+                    <thead className="bg-gray-50"><tr><th className="p-4 md:p-5 text-sm font-semibold text-gray-600 whitespace-nowrap">Nombre</th><th className="p-4 md:p-5 text-sm font-semibold text-gray-600 hidden md:table-cell whitespace-nowrap">Imagen</th><th className="p-4 md:p-5 min-w-[100px]"></th></tr></thead>
+                    <tbody className="divide-y divide-gray-100">{categorias.map(cat => (<tr key={cat.id} className="hover:bg-gray-50 transition-colors"><td className="p-4 md:p-5 font-bold text-gray-800">{cat.nombre}</td><td className="p-4 md:p-5 text-gray-700 text-sm hidden md:table-cell"><img src={getOptimizedCloudinaryUrl(cat.imagen_url, { width: 200 }) || 'https://via.placeholder.com/100'} alt={cat.nombre} className="w-16 h-10 rounded-lg object-cover bg-gray-100" /></td><td className="px-4 py-4 md:px-6 text-right whitespace-nowrap flex justify-end gap-1"><button onClick={() => handleOpenEditCategory(cat)} aria-label={`Editar categoría ${cat.nombre}`} className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-gray-100"><Edit size={18} /></button><button onClick={() => handleDeleteCategory(cat.id)} aria-label={`Eliminar categoría ${cat.nombre}`} className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100"><Trash2 size={18} /></button></td></tr>))}</tbody>
+                  </table>
+                </div>
+              </div>
+            </div>)}
           {activeTab === 'config' && (
             <Configuracion
               datosNegocio={datosNegocio}
