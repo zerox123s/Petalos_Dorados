@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import Tienda from './pages/Tienda'
 import Login from './pages/Login'
@@ -13,7 +13,7 @@ import WhatsAppButton from './components/WhatsAppButton'
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <CartProvider>
         <Toaster position="top-right" containerStyle={{ top: 80 }} />
         <CartSidebar />
@@ -31,7 +31,7 @@ function App() {
           <Route path="/producto/:id" element={<ProductDetail />} />
         </Routes>
       </CartProvider>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
