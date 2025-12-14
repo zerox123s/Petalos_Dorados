@@ -10,22 +10,11 @@ export default function Contacto() {
 
     const [formData, setFormData] = useState({
         nombre: '',
-        celular: '',
         mensaje: ''
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        if (name === 'celular') {
-            let numbersOnly = value.replace(/[^0-9]/g, '');
-            if (numbersOnly.length > 0 && numbersOnly[0] !== '9') {
-                if (numbersOnly.length === 1) return;
-            }
-            if (numbersOnly.length > 9) numbersOnly = numbersOnly.slice(0, 9);
-            setFormData(prev => ({ ...prev, [name]: numbersOnly }));
-            return;
-        }
 
         setFormData(prev => ({ ...prev, [name]: value }));
     };
@@ -34,16 +23,10 @@ export default function Contacto() {
         e.preventDefault();
 
         const nombre = formData.nombre.trim();
-        const celular = formData.celular.trim();
         const mensaje = formData.mensaje.trim();
 
-        if (!nombre || !celular || !mensaje) {
+        if (!nombre || !mensaje) {
             toast.error('Por favor completa todos los campos');
-            return;
-        }
-
-        if (celular.length !== 9 || celular[0] !== '9') {
-            toast.error('El celular debe tener 9 dígitos y empezar con 9');
             return;
         }
 
@@ -54,17 +37,16 @@ export default function Contacto() {
 
         const e_flower = '\u{1F338}';
         const e_user = '\u{1F464}';
-        const e_phone = '\u{1F4F1}';
         const e_chat = '\u{1F4AC}';
 
-        const message = `${e_flower} *Hola Pétalos Dorados, tengo una consulta:* ${e_flower}\n\n${e_user} *Soy:* ${nombre}\n${e_phone} *Mi Celular:* ${celular}\n\n${e_chat} *Les escribo lo siguiente:*\n_${mensaje}_`;
+        const message = `${e_flower} *Hola Pétalos Dorados, tengo una consulta:* ${e_flower}\n\n${e_user} *Soy:* ${nombre}\n\n${e_chat} *Les escribo lo siguiente:*\n_${mensaje}_`;
         let phoneNumber = negocio.celular_whatsapp.replace(/\D/g, '');
         if (phoneNumber.length === 9) phoneNumber = `51${phoneNumber}`;
 
         const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
 
         window.open(url, '_blank');
-        setFormData({ nombre: '', celular: '', mensaje: '' });
+        setFormData({ nombre: '', mensaje: '' });
     };
 
     return (
@@ -149,18 +131,7 @@ export default function Contacto() {
                                         required
                                     />
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Celular / WhatsApp</label>
-                                    <input
-                                        type="tel"
-                                        name="celular"
-                                        value={formData.celular}
-                                        onChange={handleChange}
-                                        className="w-full px-5 md:px-6 py-3 md:py-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 focus:bg-white focus:ring-2 focus:ring-[#BE185D] focus:border-transparent outline-none transition-all placeholder-gray-400"
-                                        placeholder="999 999 999"
-                                        required
-                                    />
-                                </div>
+
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">¿En qué podemos ayudarte?</label>
                                     <textarea

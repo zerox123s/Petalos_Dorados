@@ -12,8 +12,7 @@ export default function WhatsAppButton() {
     const handleClick = () => {
         let phoneNumber = business.celular_whatsapp.replace(/\D/g, '');
         if (phoneNumber.length === 9) phoneNumber = `51${phoneNumber}`;
-        const e_flower = '\u{1F338}';
-        const defaultMessage = `${e_flower} Hola Pétalos Dorados, visité su web y me gustaría más información sobre sus arreglos ${e_flower}`;
+        const defaultMessage = business?.mensaje_pedidos || '';
         const message = encodeURIComponent(defaultMessage);
         window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`, '_blank');
     };

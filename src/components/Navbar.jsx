@@ -52,11 +52,12 @@ export default function Navbar() {
               <MapPin size={13} className="text-pink-200" />
               {negocio?.ubicacion || 'Lambayeque'}
             </span>
-            <span className="flex items-center gap-1.5 whitespace-nowrap px-2 py-0.5 bg-pink-700/50 rounded text-pink-100 border border-pink-600/50 hover:bg-pink-700 transition-colors cursor-help" title="Horario: Tardes">
-              <Truck size={13} className="text-pink-200" />
-              Envíos a Chiclayo (Tarde)
-            </span>
           </div>
+
+          <span className="text-sm font-medium tracking-wide text-pink-50 drop-shadow-sm">
+            Bienvenidos a Pétalos Dorados
+          </span>
+
           <div className="hidden md:flex items-center gap-4">
             <span className="text-pink-200">Síguenos:</span>
             <div className="flex items-center gap-3">

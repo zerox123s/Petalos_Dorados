@@ -12,8 +12,6 @@ export default function CartSidebar() {
         name: '',
         deliveryType: '',
         date: '',
-        time: '',
-        phone: '',
         address: '',
         district: '',
         dedication: '',
@@ -55,17 +53,13 @@ export default function CartSidebar() {
                 newErrors.date = 'La fecha no puede ser pasada';
             }
         }
-        if (!formData.time) newErrors.time = 'Selecciona un horario';
+
 
         if (formData.deliveryType === 'delivery') {
             if (!formData.district) newErrors.district = 'Selecciona tu distrito';
-            if (!formData.address.trim()) newErrors.address = 'Ingresa la dirección de entrega';
 
-            if (!formData.phone.trim()) {
-                newErrors.phone = 'Ingresa un teléfono de contacto';
-            } else if (formData.phone.length !== 9 || formData.phone[0] !== '9') {
-                newErrors.phone = 'El teléfono debe tener 9 dígitos y empezar con 9';
-            }
+            // Address is now optional
+
         }
 
         setErrors(newErrors);
@@ -75,22 +69,7 @@ export default function CartSidebar() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        // Strict number validation for phone
-        if (name === 'phone') {
-            let numbersOnly = value.replace(/[^0-9]/g, '');
 
-            // Check prefix '9'
-            if (numbersOnly.length > 0 && numbersOnly[0] !== '9') {
-                if (numbersOnly.length === 1) return;
-            }
-
-            // Max length 9
-            if (numbersOnly.length > 9) numbersOnly = numbersOnly.slice(0, 9);
-
-            setFormData(prev => ({ ...prev, [name]: numbersOnly }));
-            if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
-            return;
-        }
 
         setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
@@ -128,11 +107,10 @@ export default function CartSidebar() {
             const e_flower = '\u{1F338}';
             const e_user = '\u{1F464}';
             const e_date = '\u{1F4C5}';
-            const e_time = '\u{23F0}';
+
             const e_moto = '\u{1F6F5}';
             const e_store = '\u{1F3EA}';
             const e_pin = '\u{1F4CD}';
-            const e_phone = '\u{1F4F1}';
             const e_gift = '\u{1F381}';
             const e_money = '\u{1F4B0}';
             const e_letter = '\u{1F48C}';
@@ -147,13 +125,10 @@ export default function CartSidebar() {
             ).join('\n\n');
 
             const deliveryText = formData.deliveryType === 'delivery' ? `${e_moto} *Envío a Domicilio*` : `${e_store} *Recojo en Tienda*`;
-            const timeLabel = formData.deliveryType === 'delivery' ? 'Hora de Entrega' : 'Hora de Recojo';
 
+            const addressLine = formData.deliveryType === 'delivery' && formData.address ? `\n${e_pin} *Dirección:* ${formData.address}\n\u{1F3D8} *Distrito:* ${formData.district}` : (formData.deliveryType === 'delivery' ? `\n\u{1F3D8} *Distrito:* ${formData.district}` : '');
 
-            const addressLine = formData.deliveryType === 'delivery' ? `\n${e_pin} *Dirección:* ${formData.address}\n\u{1F3D8} *Distrito:* ${formData.district}` : '';
-            const phoneLine = formData.deliveryType === 'delivery' ? `\n${e_phone} *Teléfono Extra:* ${formData.phone}` : '';
-
-            const fullMessage = `${e_flower} *Hola Pétalos Dorados, me gustaría confirmar este pedido:* ${e_flower}\n\n${e_user} *Soy:* ${formData.name}${phoneLine}\n${e_date} *Fecha de entrega:* ${formData.date}\n${e_time} *${timeLabel}:* ${formData.time}\n${deliveryText}${addressLine}\n\n${e_gift} *Llevo lo siguiente:*\n\n${itemsText}\n\n${e_money} *Total a pagar: S/. ${total.toFixed(2)}*\n\n${e_letter} *Dedicatoria:*\n_${formData.dedication || 'Sin tarjeta'}_\n\n${e_memo} *Nota Adicional:*\n_${formData.observation || 'Ninguna'}_`;
+            const fullMessage = `${e_flower} *Hola Pétalos Dorados, me gustaría confirmar este pedido:* ${e_flower}\n\n${e_user} *Soy:* ${formData.name}\n${e_date} *Fecha de entrega:* ${formData.date}\n${deliveryText}${addressLine}\n\n${e_gift} *Llevo lo siguiente:*\n\n${itemsText}\n\n${e_money} *Total a pagar: S/. ${total.toFixed(2)}*\n\n${e_letter} *Dedicatoria:*\n_${formData.dedication || 'Sin tarjeta'}_\n\n${e_memo} *Nota Adicional:*\n_${formData.observation || 'Ninguna'}_`;
 
             const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(fullMessage)}`;
 
@@ -162,6 +137,10 @@ export default function CartSidebar() {
 
 
             window.open(whatsappUrl, '_blank');
+
+            // Clear cart logic as requested
+            clearCart();
+            closeCart();
 
         } catch (err) {
             toast.dismiss(loadingToast);
@@ -208,7 +187,7 @@ export default function CartSidebar() {
                             <div className="space-y-6 animate-fade-in">
 
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">🙋 Tu Nombre <span className="text-pink-500">*</span></label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Tu Nombre <span className="text-pink-500">*</span></label>
                                     <input
                                         type="text"
                                         name="name"
@@ -236,9 +215,26 @@ export default function CartSidebar() {
                                     {errors.deliveryType && <p className="text-red-500 text-xs mt-1 ml-1">{errors.deliveryType}</p>}
                                 </div>
 
+
+                                {/* Delivery Date */}
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Fecha <span className="text-pink-500">*</span></label>
+                                    <input
+                                        type="date"
+                                        name="date"
+                                        required
+                                        min={new Date().toLocaleDateString('en-CA')}
+                                        value={formData.date}
+                                        onChange={handleInputChange}
+                                        placeholder="Selecciona una fecha"
+                                        className={`w-full px-4 py-3 rounded-xl bg-white border focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all ${errors.date ? 'border-red-300 focus:border-red-300' : 'border-gray-200 focus:border-pink-300'}`}
+                                    />
+                                    {errors.date && <p className="text-red-500 text-xs mt-1 ml-1">{errors.date}</p>}
+                                </div>
+
                                 {formData.deliveryType === 'delivery' && (
                                     <div className="animate-fade-in">
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">🏘️ Distrito de Envío <span className="text-pink-500">*</span></label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Distrito de Envío <span className="text-pink-500">*</span></label>
                                         <select
                                             name="district"
                                             value={formData.district}
@@ -258,108 +254,30 @@ export default function CartSidebar() {
                                     </div>
                                 )}
 
-                                {/* Delivery Date & Time (Row) */}
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">📅 Fecha <span className="text-pink-500">*</span></label>
-                                        <input
-                                            type="date"
-                                            name="date"
-                                            required
-                                            min={new Date().toLocaleDateString('en-CA')}
-                                            value={formData.date}
-                                            onChange={handleInputChange}
-                                            placeholder="Selecciona una fecha"
-                                            className={`w-full px-4 py-3 rounded-xl bg-white border focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all ${errors.date ? 'border-red-300 focus:border-red-300' : 'border-gray-200 focus:border-pink-300'}`}
-                                        />
-                                        {errors.date && <p className="text-red-500 text-xs mt-1 ml-1">{errors.date}</p>}
-                                    </div>
 
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            ⏰ {formData.deliveryType === 'delivery' ? 'Hora de Entrega' : 'Hora de Recojo'} <span className="text-pink-500">*</span>
-                                        </label>
-                                        <select
-                                            name="time"
-                                            value={formData.time}
-                                            onChange={handleInputChange}
-                                            className={`w-full px-4 py-3 rounded-xl bg-white border focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all appearance-none cursor-pointer ${errors.time ? 'border-red-300 focus:border-red-300' : 'border-gray-200 focus:border-pink-300'}`}
-                                        >
-                                            <option value="">{formData.deliveryType === 'delivery' ? '¿A qué hora lo enviamos?' : '¿A qué hora pasas?'}</option>
-
-                                            {(() => {
-                                                const timeSlots = [
-                                                    { label: "7:00 AM - 9:00 AM", startHour: 7 },
-                                                    { label: "9:00 AM - 11:00 AM", startHour: 9 },
-                                                    { label: "11:00 AM - 1:00 PM", startHour: 11 },
-                                                    { label: "1:00 PM - 3:00 PM", startHour: 13 },
-                                                    { label: "3:00 PM - 5:00 PM", startHour: 15 },
-                                                    { label: "5:00 PM - 6:00 PM", startHour: 17 }
-                                                ];
-
-
-                                                const today = new Date();
-                                                const todayStr = today.toLocaleDateString('en-CA'); // 
-                                                const currentHour = today.getHours();
-
-                                                return timeSlots.filter(slot => {
-
-                                                    const restrictedDistricts = ['Chiclayo', 'Lambayeque'];
-                                                    if (restrictedDistricts.includes(formData.district)) {
-                                                        if (slot.startHour < 13) return false;
-                                                    }
-
-
-                                                    if (formData.date === todayStr) {
-                                                        return slot.startHour > currentHour;
-                                                    }
-
-
-                                                    return true;
-                                                }).map(slot => (
-                                                    <option key={slot.label} value={slot.label}>{slot.label}</option>
-                                                ));
-                                            })()}
-                                        </select>
-                                        {errors.time && <p className="text-red-500 text-xs mt-1 ml-1">{errors.time}</p>}
-                                    </div>
-                                </div>
 
 
                                 {formData.deliveryType === 'delivery' && (
                                     <div className="space-y-4 animate-fade-in">
 
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-2">📍 Dirección de Entrega <span className="text-pink-500">*</span></label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">Dirección de Entrega</label>
                                             <input
                                                 type="text"
                                                 name="address"
                                                 value={formData.address}
                                                 onChange={handleInputChange}
-                                                placeholder="Calle, Número, Referencia..."
+                                                placeholder="Calle, Número, Referencia... (Opcional)"
                                                 className={`w-full px-4 py-3 rounded-xl bg-white border focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all ${errors.address ? 'border-red-300 focus:border-red-300' : 'border-gray-200 focus:border-pink-300'}`}
                                             />
                                             {errors.address && <p className="text-red-500 text-xs mt-1 ml-1">{errors.address}</p>}
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-2">📞 Teléfono de Contacto <span className="text-pink-500">*</span></label>
-                                            <input
-                                                type="tel"
-                                                name="phone"
-                                                value={formData.phone}
-                                                onChange={handleInputChange}
-                                                placeholder="Para coordinar la entrega"
-                                                className={`w-full px-4 py-3 rounded-xl bg-white border focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all ${errors.phone ? 'border-red-300 focus:border-red-300' : 'border-gray-200 focus:border-pink-300'}`}
-                                            />
-                                            {errors.phone && <p className="text-red-500 text-xs mt-1 ml-1">{errors.phone}</p>}
                                         </div>
                                     </div>
                                 )}
 
                                 {/* Dedication Card */}
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">💌 Dedicatoria para la Tarjeta</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Dedicatoria para la Tarjeta</label>
                                     <textarea
                                         name="dedication"
                                         value={formData.dedication}
@@ -372,13 +290,13 @@ export default function CartSidebar() {
 
 
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">📝 Instrucciones Adicionales</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Instrucciones Adicionales</label>
                                     <textarea
                                         name="observation"
                                         value={formData.observation}
                                         onChange={handleInputChange}
                                         rows="2"
-                                        placeholder="Color de lazo, hora preferida, etc."
+                                        placeholder="Color de lazo, hora de entrega, etc."
                                         className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 focus:border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all resize-none"
                                     ></textarea>
                                 </div>
