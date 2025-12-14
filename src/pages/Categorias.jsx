@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
 import Footer from '../components/Footer';
-import ProductDetailModal from '../components/ProductDetailModal';
+
 import Breadcrumbs from '../components/Breadcrumbs';
 import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/image';
 
@@ -58,8 +58,7 @@ const CategoryOverviewCard = ({ category }) => {
 export default function Categorias() {
   const { categories: categorias, products: productos, isShopLoading: loading } = useCart();
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const location = useLocation();
 
@@ -86,15 +85,7 @@ export default function Categorias() {
     crumbs.push({ label: currentCategory.nombre, link: null });
   }
 
-  const handleProductClick = (product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setTimeout(() => setSelectedProduct(null), 300);
-  };
 
   if (loading) return <div className="h-screen flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div></div>;
 
@@ -140,7 +131,6 @@ export default function Categorias() {
                         <ProductCard
                           key={prod.id}
                           product={prod}
-                          onClick={() => handleProductClick(prod)}
                         />
                       ))}
                     </div>
@@ -161,11 +151,7 @@ export default function Categorias() {
 
 
 
-      <ProductDetailModal
-        product={selectedProduct}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+
     </div>
   );
 }

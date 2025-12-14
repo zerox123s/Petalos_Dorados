@@ -1,22 +1,28 @@
 import { ShoppingCart, Flower, Leaf } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { getOptimizedCloudinaryUrl } from '../utils/image';
 
 export default function ProductCard({ product, negocio, onClick }) {
     const { addToCart } = useCart();
+    const location = useLocation();
 
     const handleAddToCart = (e) => {
         e.stopPropagation();
+        e.preventDefault();
         if (!product.activo) return;
         addToCart(product);
     };
 
     const imageUrl = getOptimizedCloudinaryUrl(product.imagen_url, { width: 400 });
 
+    const isFromCategories = location.pathname.includes('/categorias') || location.state?.from?.includes('/categorias');
+
     return (
-        <div
-            onClick={onClick}
-            className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group transform hover:-translate-y-1 cursor-pointer"
+        <Link
+            to={`/producto/${product.id}`}
+            state={{ from: isFromCategories ? '/categorias' : location.pathname }}
+            className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group transform hover:-translate-y-1 cursor-pointer block"
         >
             {/* Image Section */}
             <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
@@ -97,6 +103,6 @@ export default function ProductCard({ product, negocio, onClick }) {
                     )}
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }

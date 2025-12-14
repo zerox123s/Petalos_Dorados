@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Categorias from './pages/Categorias'
 import Contacto from './pages/Contacto'
+import ProductDetail from './pages/ProductDetail'
 import ProtectedRoute from './components/ProtectedRoute'
 import { CartProvider } from './context/CartContext'
 import CartSidebar from './components/CartSidebar'
@@ -27,6 +28,7 @@ function App() {
           } />
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/contacto" element={<Contacto />} />
+          <Route path="/producto/:id" element={<ProductDetail />} />
         </Routes>
       </CartProvider>
     </BrowserRouter>

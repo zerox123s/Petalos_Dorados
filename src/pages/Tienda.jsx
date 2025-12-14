@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
 import RevealOnScroll from '../components/RevealOnScroll';
-import ProductDetailModal from '../components/ProductDetailModal';
+
 import Footer from '../components/Footer';
 import { Gift, Sparkles, Flower2, ChevronLeft, ChevronRight, Clock, Heart, ArrowRight } from 'lucide-react';
 import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/image';
@@ -13,7 +13,7 @@ const DEFAULT_CATEGORY_IMAGE = '';
 
 export default function Tienda() {
   const { products: productos, categories: categorias, isShopLoading: loading } = useCart();
-  const [selectedProduct, setSelectedProduct] = useState(null);
+
 
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const heroImages = [
@@ -259,7 +259,7 @@ export default function Tienda() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8 mb-12 min-h-[800px]">
             {currentProducts.map((prod, index) => (
               <RevealOnScroll key={prod.id} delay={index * 50}>
-                <ProductCard product={prod} onClick={() => setSelectedProduct(prod)} />
+                <ProductCard product={prod} />
               </RevealOnScroll>
             ))}
           </div>
@@ -330,12 +330,7 @@ export default function Tienda() {
 
       <Footer />
 
-      {selectedProduct && (
-        <ProductDetailModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
+
     </div>
   );
 }
