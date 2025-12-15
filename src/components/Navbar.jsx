@@ -46,17 +46,13 @@ export default function Navbar() {
           <div className="flex items-center gap-4 md:gap-6 overflow-x-auto w-full md:w-auto justify-center md:justify-start pb-1 md:pb-0 scrollbar-hide">
             <span className="flex items-center gap-1.5 whitespace-nowrap">
               <Phone size={13} className="text-pink-200" />
-              {negocio?.celular_whatsapp || '+51 999 999 999'}
+              {(negocio?.celular_whatsapp || '999999999').replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')} / 925 002 785
             </span>
             <span className="flex items-center gap-1.5 whitespace-nowrap">
               <MapPin size={13} className="text-pink-200" />
               {negocio?.ubicacion || 'Lambayeque'}
             </span>
           </div>
-
-          <span className="text-sm font-medium tracking-wide text-pink-50 drop-shadow-sm">
-            Bienvenidos a Pétalos Dorados
-          </span>
 
           <div className="hidden md:flex items-center gap-4">
             <span className="text-pink-200">Síguenos:</span>

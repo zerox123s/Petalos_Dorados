@@ -256,7 +256,7 @@ export default function Tienda() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Descubre Nuestros Productos</h2>
             <div className="w-24 h-1.5 bg-pink-600 mx-auto rounded-full mt-6"></div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8 mb-12 min-h-[800px]">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8 mb-12 min-h-[300px] content-start">
             {currentProducts.map((prod, index) => (
               <RevealOnScroll key={prod.id} delay={index * 50}>
                 <ProductCard product={prod} />
