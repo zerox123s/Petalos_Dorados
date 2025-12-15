@@ -147,9 +147,9 @@ export default function Tienda() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 relative z-10">
-              <a href="#destacados" className="w-full sm:w-auto bg-pink-600 text-white px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all flex items-center justify-center gap-2 group">
+              <a href="#destacados" className="w-full sm:w-auto bg-pink-600 text-white px-6 md:px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all flex items-center justify-center gap-2 group text-sm md:text-base">
                 Ver productos
-                <Gift size={20} className="group-hover:rotate-12 transition-transform" />
+                <Gift size={20} className="group-hover:rotate-12 transition-transform flex-shrink-0" />
               </a>
             </div>
           </div>
@@ -241,9 +241,9 @@ export default function Tienda() {
               </div>
             </div>
             <div className="text-center mt-8">
-              <Link to="/categorias" className="inline-flex items-center justify-center gap-2 bg-pink-600 text-white px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all group">
+              <Link to="/categorias" className="inline-flex items-center justify-center gap-2 bg-pink-600 text-white px-6 md:px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all group w-full sm:w-auto text-sm md:text-base">
                 Explorar todas las categorías
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform flex-shrink-0" />
               </Link>
             </div>
           </div>
@@ -268,10 +268,10 @@ export default function Tienda() {
             <div className="flex justify-center mt-12 mb-14">
               <button
                 onClick={handleLoadMore}
-                className="bg-pink-600 text-white px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all flex items-center gap-2 group"
+                className="bg-pink-600 text-white px-6 md:px-10 py-4 rounded-full font-bold shadow-[0_20px_40px_-5px_rgba(236,72,153,0.3)] hover:shadow-[0_25px_50px_-5px_rgba(236,72,153,0.5)] hover:bg-pink-700 hover:scale-105 transition-all flex items-center gap-2 group w-full sm:w-auto justify-center text-sm md:text-base"
               >
                 Ver más productos
-                <Flower2 size={20} className="group-hover:rotate-45 transition-transform duration-300" />
+                <Flower2 size={20} className="group-hover:rotate-45 transition-transform duration-300 flex-shrink-0" />
               </button>
             </div>
           )}

@@ -325,7 +325,7 @@ export default function CartSidebar() {
                                                         <h3 className="font-bold text-gray-900 text-sm line-clamp-1">{item.nombre}</h3>
                                                         <p className="text-xs text-gray-500">{item.categorias?.nombre}</p>
                                                     </div>
-                                                    <div className="flex items-center justify-between mt-2">
+                                                    <div className="flex items-center justify-between mt-2 flex-wrap gap-y-2">
                                                         <div className="flex items-center gap-1 bg-gray-100 rounded-full p-1">
                                                             <button onClick={() => decreaseQuantity(item.id)} className="w-6 h-6 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-600 hover:text-pink-600">
                                                                 <Minus size={12} />
@@ -335,7 +335,7 @@ export default function CartSidebar() {
                                                                 <Plus size={12} />
                                                             </button>
                                                         </div>
-                                                        <span className="font-bold text-gray-900 text-sm">S/. {(item.precio * item.quantity).toFixed(2)}</span>
+                                                        <span className="font-bold text-gray-900 text-sm whitespace-nowrap">S/. {(item.precio * item.quantity).toFixed(2)}</span>
                                                     </div>
                                                 </div>
                                                 <button onClick={() => removeFromCart(item.id, false)} className="text-gray-400 hover:text-red-500 self-start p-1"><Trash2 size={16} /></button>
@@ -376,10 +376,10 @@ export default function CartSidebar() {
                                 <button
                                     onClick={processOrder}
                                     disabled={isLoading}
-                                    className="w-full py-4 rounded-full bg-[#25D366] text-white font-bold text-lg hover:bg-[#20bd5a] transition-all transform hover:scale-[1.02] shadow-lg shadow-green-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 group"
+                                    className="w-full py-3 md:py-4 rounded-full bg-[#25D366] text-white font-bold text-base md:text-lg hover:bg-[#20bd5a] transition-all transform hover:scale-[1.02] shadow-lg shadow-green-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 group px-2"
                                 >
-                                    {isLoading ? <Loader2 className="animate-spin" /> : <MessageSquare size={22} className="text-white fill-current opacity-90" />}
-                                    <span>Enviar Pedido al WhatsApp</span>
+                                    {isLoading ? <Loader2 className="animate-spin" /> : <MessageSquare size={20} className="text-white fill-current opacity-90 md:w-6 md:h-6" />}
+                                    <span className="truncate">Enviar Pedido al WhatsApp</span>
                                 </button>
                             )}
                         </div>
