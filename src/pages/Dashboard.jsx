@@ -205,7 +205,7 @@ export default function Dashboard() {
 
   const filteredProductos = productos.filter(p => {
     const searchTermMatch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase());
-    const categoryMatch = selectedCategory === 'all' || p.categorias?.nombre === selectedCategory;
+    const categoryMatch = selectedCategory === 'all' || p.categoria_id == selectedCategory;
     const statusMatch = selectedStatus === 'all' || (selectedStatus === 'visible' && p.activo) || (selectedStatus === 'oculto' && !p.activo);
     return searchTermMatch && categoryMatch && statusMatch;
   });
@@ -271,7 +271,7 @@ export default function Dashboard() {
                   >
                     <option value="all">Todas las categorías</option>
                     {categorias.map(cat => (
-                      <option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
+                      <option key={cat.id} value={cat.id}>{cat.nombre}</option>
                     ))}
                   </select>
                   <select

@@ -114,11 +114,14 @@ export default function Footer() {
             <ul className="space-y-3 md:space-y-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 lg:gap-0">
               <li className="flex items-start gap-3 text-pink-100/90">
                 <MapPin size={20} className="text-pink-300 mt-0.5 flex-shrink-0" />
-                <span className="text-sm">{negocio?.ubicacion || negocio?.direccion || 'Ubicación no disponible'}</span>
+                <div>
+                  <span className="text-sm block">{negocio?.ubicacion || negocio?.direccion || 'Ubicación no disponible'}</span>
+                  <span className="text-xs text-pink-300/80 block mt-0.5">(Ref: Al frente del colegio Jorge Basadre)</span>
+                </div>
               </li>
               <li className="flex items-center gap-3 text-pink-100/90">
                 <Phone size={20} className="text-pink-300 flex-shrink-0" />
-                <span className="text-sm">{negocio?.celular_whatsapp || negocio?.telefono || 'No disponible'}</span>
+                <span className="text-sm">{(negocio?.celular_whatsapp || negocio?.telefono || '999999999').replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')} / 925 002 785</span>
               </li>
               <li className="flex items-center gap-3 text-pink-100/90">
                 <Truck size={20} className="text-pink-300 flex-shrink-0" />

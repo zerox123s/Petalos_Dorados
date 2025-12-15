@@ -98,17 +98,17 @@ export default function ProductDetail() {
             <Navbar />
             <Breadcrumbs crumbs={crumbs} />
 
-            <main className="flex-1 w-full pb-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+            <main className="flex-1 w-full pb-5">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
                     <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden flex flex-col lg:flex-row mb-16">
 
                         {/* Image Section */}
-                        <div className="w-full lg:w-1/2 relative bg-gray-100 h-[400px] lg:h-[600px] group">
+                        <div className="w-full lg:w-1/2 relative bg-gray-100 h-[350px] lg:h-auto group">
                             <img
                                 src={imageUrl || 'https://via.placeholder.com/800'}
                                 alt={product.nombre}
-                                className="w-full h-full object-cover"
+                                className="absolute inset-0 w-full h-full object-cover"
                             />
                             {/* Category Badge */}
                             <div className="absolute top-6 left-6 z-10">
@@ -148,9 +148,14 @@ export default function ProductDetail() {
                                 </div>
 
                                 <div className="prose prose-pink prose-lg text-gray-600 mb-10">
-                                    <p className="leading-relaxed font-light border-l-4 border-pink-100 pl-6">
-                                        {product.descripcion}
-                                    </p>
+                                    <ul className="space-y-2 border-l-4 border-pink-100 pl-6 list-none">
+                                        {product.descripcion?.split('\n').filter(l => l.trim()).map((line, i) => (
+                                            <li key={i} className="flex items-start gap-2 text-gray-600 font-light">
+                                                <span className="text-pink-400 mt-1.5">•</span>
+                                                <span className="leading-relaxed">{line}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
 
                                 {/* Quantity Selector */}

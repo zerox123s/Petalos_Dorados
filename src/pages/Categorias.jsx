@@ -66,7 +66,7 @@ export default function Categorias() {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [location.hash]);
 
-  const activeHash = location.hash.replace('#', '');
+  const activeHash = decodeURIComponent(location.hash.replace('#', ''));
   const displayedCategorias = activeHash
     ? categorias.filter(cat => cat.nombre.toLowerCase().replace(/ /g, '-') === activeHash)
     : categorias;

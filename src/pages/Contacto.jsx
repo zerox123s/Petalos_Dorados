@@ -79,7 +79,7 @@ export default function Contacto() {
                             </div>
                             <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Llámanos / WhatsApp</h3>
                             <p className="text-gray-500 mb-4 text-xs md:text-sm">Estamos disponibles para atenderte</p>
-                            <p className="text-lg md:text-xl font-bold text-[#BE185D] font-mono">{negocio?.celular_whatsapp || 'Cargando...'}</p>
+                            <p className="text-lg md:text-xl font-bold text-[#BE185D] font-mono">{(negocio?.celular_whatsapp || '999999999').replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')} / 925 002 785</p>
                         </div>
 
                         <div className="bg-white p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 flex flex-col items-center text-center group">
@@ -87,14 +87,12 @@ export default function Contacto() {
                                 <MapPin size={24} className="md:w-7 md:h-7" />
                             </div>
                             <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Nuestra Ubicación</h3>
-                            <p className="text-lg md:text-xl font-bold text-[#BE185D] font-mono mb-4 max-w-[250px] mx-auto leading-tight">{negocio?.ubicacion || 'Cargando...'}</p>
+                            <p className="text-lg md:text-xl font-bold text-[#BE185D] font-mono mb-1 max-w-[250px] mx-auto leading-tight">{negocio?.ubicacion || 'Cargando...'}</p>
+                            <p className="text-xs text-gray-400 mb-4">(Referencia: Al frente del colegio Jorge Basadre)</p>
                             <div className="flex flex-col items-center gap-2 w-full">
                                 <div className="flex items-center gap-1 text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                                     <Truck size={12} />
                                     <span>Envíos Disponibles</span>
-                                </div>
-                                <div className="text-xs font-semibold text-pink-700 bg-pink-50 px-3 py-1.5 rounded-full border border-pink-100 w-full text-center">
-                                    📦 Envíos a Chiclayo: Turno Tarde
                                 </div>
                             </div>
                         </div>

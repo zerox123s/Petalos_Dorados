@@ -22,7 +22,7 @@ export default function ProductCard({ product, negocio, onClick }) {
         <Link
             to={`/producto/${product.id}`}
             state={{ from: isFromCategories ? '/categorias' : location.pathname }}
-            className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group transform hover:-translate-y-1 cursor-pointer block"
+            className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group cursor-pointer block"
         >
             {/* Image Section */}
             <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
@@ -38,7 +38,7 @@ export default function ProductCard({ product, negocio, onClick }) {
                 <img
                     src={imageUrl || 'https://via.placeholder.com/400'}
                     alt={product.nombre}
-                    className={`w-full h-full object-cover ${!product.activo ? 'grayscale opacity-60' : ''}`}
+                    className={`w-full h-full object-cover transform transition-transform duration-500 md:group-hover:scale-110 ${!product.activo ? 'grayscale opacity-60' : ''}`}
                 />
 
                 {/* Hover Gradient Overlay */}
@@ -58,13 +58,27 @@ export default function ProductCard({ product, negocio, onClick }) {
             <div className="p-3 md:p-5 pt-3 md:pt-4 flex flex-col flex-grow">
 
                 {/* Title & Description */}
-                <div className="mb-2">
+                <div className="mb-2 relative">
                     <h3 className="text-sm md:text-xl font-bold text-gray-900 mb-1 leading-tight">
                         {product.nombre}
                     </h3>
-                    <p className="text-[10px] md:text-sm text-gray-400 line-clamp-2 font-light leading-relaxed">
-                        {product.descripcion}
-                    </p>
+
+                    {/* Description List - Only 2 lines */}
+                    <div className="relative">
+                        <ul className="text-[10px] md:text-sm text-gray-500 font-light space-y-0.5">
+                            {product.descripcion?.split('\n').filter(l => l.trim()).slice(0, 2).map((line, i) => (
+                                <li key={i} className="flex items-start gap-1">
+                                    <span className="text-pink-400 mt-0.5 flex-shrink-0">•</span>
+                                    <span className="line-clamp-1">
+                                        {line}
+                                        {i === 1 && product.descripcion?.split('\n').filter(l => l.trim()).length > 2 && (
+                                            <span className="ml-0.5 font-bold text-pink-500">...</span>
+                                        )}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
 
                 {/* Status Indicator */}
