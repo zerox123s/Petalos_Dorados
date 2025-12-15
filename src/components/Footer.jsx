@@ -139,7 +139,7 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-center items-center gap-4">
           <p className="text-sm text-pink-100/60 text-center">
             © {new Date().getFullYear()} {negocio?.nombre_tienda || 'Florería'}. Todos los derechos reservados.
-            <RouterLink to="/chija" className="ml-2 text-pink-900/10 hover:text-pink-500/50 cursor-pointer transition-colors" aria-hidden="true">•</RouterLink>
+            <RouterLink to="/acceso-staff-only-x9z2" className="ml-2 text-pink-900/10 hover:text-pink-500/50 cursor-pointer transition-colors" aria-hidden="true">•</RouterLink>
           </p>
         </div>
       </div>

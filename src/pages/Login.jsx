@@ -29,7 +29,7 @@ export default function Login() {
       setLoading(false)
     } else {
       toast.success('¡Bienvenido de nuevo!')
-      navigate('/admin')
+      navigate('/admin-panel-secure-7h3x9r')
     }
   }
 
