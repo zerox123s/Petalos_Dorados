@@ -132,8 +132,8 @@ export default function ProductDetail() {
                             <div className="flex-1">
                                 <h1 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">{product.nombre}</h1>
 
-                                <div className="flex items-center gap-6 mb-8">
-                                    <span className="text-4xl font-bold text-pink-600">S/. {product.precio.toFixed(2)}</span>
+                                <div className="flex flex-wrap items-center gap-3 md:gap-6 mb-6 md:mb-8">
+                                    <span className="text-3xl md:text-4xl font-bold text-pink-600 whitespace-nowrap">S/. {product.precio.toFixed(2)}</span>
                                     {product.activo ? (
                                         <div className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">
                                             <Leaf size={16} />
@@ -160,23 +160,23 @@ export default function ProductDetail() {
 
                                 {/* Quantity Selector */}
                                 {product.activo && (
-                                    <div className="mb-10">
+                                    <div className="mb-8 md:mb-10">
                                         <span className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Cantidad</span>
                                         <div className="flex items-center gap-4">
                                             <div className="flex items-center bg-gray-50 rounded-full border border-gray-200 shadow-sm">
                                                 <button
                                                     onClick={decrementQuantity}
-                                                    className="w-12 h-12 flex items-center justify-center text-gray-500 hover:text-pink-600 transition-colors disabled:opacity-50"
+                                                    className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center text-gray-500 hover:text-pink-600 transition-colors disabled:opacity-50"
                                                     disabled={quantity <= 1}
                                                 >
-                                                    <Minus size={20} />
+                                                    <Minus size={16} className="md:w-5 md:h-5" />
                                                 </button>
-                                                <span className="w-10 text-center font-bold text-gray-900 text-xl">{quantity}</span>
+                                                <span className="w-6 md:w-10 text-center font-bold text-gray-900 text-base md:text-xl">{quantity}</span>
                                                 <button
                                                     onClick={incrementQuantity}
-                                                    className="w-12 h-12 flex items-center justify-center text-gray-500 hover:text-pink-600 transition-colors"
+                                                    className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center text-gray-500 hover:text-pink-600 transition-colors"
                                                 >
-                                                    <Plus size={20} />
+                                                    <Plus size={16} className="md:w-5 md:h-5" />
                                                 </button>
                                             </div>
                                         </div>
@@ -189,15 +189,16 @@ export default function ProductDetail() {
                                 {product.activo ? (
                                     <button
                                         onClick={handleAddToCart}
-                                        className="w-full bg-pink-600 text-white px-8 py-5 rounded-full font-bold text-lg shadow-xl shadow-pink-200 hover:bg-pink-700 hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-3"
+                                        className="w-full bg-pink-600 text-white px-4 py-3 md:px-8 md:py-5 rounded-full font-bold text-sm md:text-lg shadow-xl shadow-pink-200 hover:bg-pink-700 hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2 md:gap-3"
                                     >
-                                        <ShoppingCart size={24} />
-                                        <span>Agregar al Carrito • S/. {(product.precio * quantity).toFixed(2)}</span>
+                                        <ShoppingCart size={20} className="md:w-6 md:h-6" />
+                                        <span className="md:hidden">Agregar • S/. {(product.precio * quantity).toFixed(2)}</span>
+                                        <span className="hidden md:inline">Agregar al Carrito • S/. {(product.precio * quantity).toFixed(2)}</span>
                                     </button>
                                 ) : (
                                     <button
                                         disabled
-                                        className="w-full bg-gray-200 text-gray-400 px-8 py-5 rounded-full font-bold text-lg cursor-not-allowed flex items-center justify-center gap-3"
+                                        className="w-full bg-gray-200 text-gray-400 px-6 py-3.5 md:px-8 md:py-5 rounded-full font-bold text-base md:text-lg cursor-not-allowed flex items-center justify-center gap-3"
                                     >
                                         Producto No Disponible
                                     </button>

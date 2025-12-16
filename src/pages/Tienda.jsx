@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Navbar from '../components/Navbar';
@@ -38,7 +38,11 @@ export default function Tienda() {
     setVisibleCount(prev => prev + 8);
   };
 
-  const currentProducts = productos.slice(0, visibleCount);
+  const shuffledProducts = useMemo(() => {
+    return [...productos].sort(() => 0.5 - Math.random());
+  }, [productos]);
+
+  const currentProducts = shuffledProducts.slice(0, visibleCount);
 
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
