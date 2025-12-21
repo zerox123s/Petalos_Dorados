@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 
 import Breadcrumbs from '../components/Breadcrumbs';
 import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/image';
@@ -91,6 +92,13 @@ export default function Categorias() {
 
   return (
     <div className="font-sans bg-gray-50">
+      <SEO
+        title={currentCategory ? `${currentCategory.nombre} - Categorías` : "Categorías"}
+        description={currentCategory
+          ? `${description} Flores y arreglos florales en Túcume, Lambayeque.`
+          : "Explora nuestras categorías de arreglos florales: ramos, cajas de flores, arreglos fúnebres y más. Florería Pétalos Dorados en Túcume, Lambayeque."
+        }
+      />
       <Navbar />
       <Breadcrumbs crumbs={crumbs} />
 

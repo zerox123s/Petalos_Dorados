@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import Tienda from './pages/Tienda'
 import Login from './pages/Login'
@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import Categorias from './pages/Categorias'
 import Contacto from './pages/Contacto'
 import ProductDetail from './pages/ProductDetail'
+import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
 import { CartProvider } from './context/CartContext'
 import CartSidebar from './components/CartSidebar'
@@ -14,7 +15,7 @@ import GlobalLoader from './components/GlobalLoader'
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <CartProvider>
         <GlobalLoader />
         <Toaster position="top-right" containerStyle={{ top: 80 }} />
@@ -31,9 +32,10 @@ function App() {
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/producto/:id" element={<ProductDetail />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </CartProvider>
-    </HashRouter>
+    </BrowserRouter>
   )
 }
 

@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import { Phone, MapPin, Clock, Facebook, Instagram, Send, MessageSquare, Truck } from 'lucide-react';
 import toast from 'react-hot-toast';
+import SEO from '../components/SEO';
 
 export default function Contacto() {
     const { business: negocio, isShopLoading: loading } = useCart();
@@ -51,6 +52,10 @@ export default function Contacto() {
 
     return (
         <div className="font-sans bg-gray-50 min-h-screen flex flex-col">
+            <SEO
+                title="Contacto"
+                description="Contáctanos en Florería Pétalos Dorados. Ubicados en Túcume, Lambayeque. Atención por WhatsApp, entregas a domicilio en Chiclayo y alrededores. Horario: 7am - 6pm."
+            />
             <Navbar />
 
             <main className="flex-grow">

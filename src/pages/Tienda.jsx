@@ -6,6 +6,7 @@ import ProductCard from '../components/ProductCard';
 import RevealOnScroll from '../components/RevealOnScroll';
 
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 import { Gift, Sparkles, Flower2, ChevronLeft, ChevronRight, Clock, Heart, ArrowRight } from 'lucide-react';
 import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/image';
 
@@ -106,6 +107,10 @@ export default function Tienda() {
 
   return (
     <div className="font-sans bg-gray-50">
+      <SEO
+        title="Tienda de Flores"
+        description="Florería Pétalos Dorados en Túcume, Lambayeque. Arreglos florales para cumpleaños, aniversarios, bodas y eventos especiales. Entrega el mismo día en Chiclayo y alrededores."
+      />
       <Navbar />
 
       <header className="relative w-full lg:min-h-screen bg-gray-50 flex lg:items-center pt-8 md:pt-6 lg:pt-10 pb-12 md:pb-16 lg:pb-20 overflow-hidden">

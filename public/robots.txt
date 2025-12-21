@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin-panel-secure-7h3x9r
+Disallow: /acceso-staff-only-x9z2
+
+Sitemap: https://petalosdorados.com/sitemap.xml
