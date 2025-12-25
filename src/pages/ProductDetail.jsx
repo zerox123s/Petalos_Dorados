@@ -112,8 +112,8 @@ export default function ProductDetail() {
                             />
                             {/* Category Badge */}
                             <div className="absolute top-6 left-6 z-10">
-                                <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-sm font-bold px-4 py-2 rounded-full shadow-sm flex items-center gap-2">
-                                    <Flower size={16} className="text-pink-600" />
+                                <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-xs md:text-sm font-bold px-2 py-1 md:px-4 md:py-2 rounded-full shadow-sm flex items-center gap-1.5 md:gap-2">
+                                    <Flower size={14} className="text-pink-600 md:w-4 md:h-4" />
                                     {product.categorias?.nombre}
                                 </span>
                             </div>
