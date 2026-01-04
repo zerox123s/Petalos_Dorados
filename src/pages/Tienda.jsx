@@ -12,6 +12,9 @@ import { getOptimizedCloudinaryUrl, getOptimizedUnsplashUrl } from '../utils/ima
 
 const DEFAULT_CATEGORY_IMAGE = '';
 
+// Variable de módulo para controlar el reset solo una vez por carga de página (F5)
+let hasCheckedReload = false;
+
 export default function Tienda() {
   const { products: productos, categories: categorias, isShopLoading: loading } = useCart();
 
@@ -23,6 +26,21 @@ export default function Tienda() {
     "/banner/rosas2.webp",
   ];
 
+  /* 
+   * LÓGICA DE DETECCIÓN DE RECARGA (F5)
+   * Se ejecuta al montar el componente. Si detectamos que es un reload real del navegador
+   * y no lo hemos procesado aún, limpiamos el storage para reiniciar la vista.
+   */
+  if (!hasCheckedReload) {
+    const navEntry = performance.getEntriesByType("navigation")[0];
+    if (navEntry && navEntry.type === 'reload') {
+      // Es un F5 -> Limpiar estado persistido para iniciar de fresco
+      sessionStorage.removeItem('tienda_visibleCount');
+      sessionStorage.removeItem('tienda_productOrder');
+    }
+    hasCheckedReload = true; // Marcar como revisado para que navegaciones futuras (Atrás/Adelante) no reseteen
+  }
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentHeroSlide((prev) => (prev + 1) % heroImages.length);
@@ -33,15 +51,72 @@ export default function Tienda() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
 
-  const [visibleCount, setVisibleCount] = useState(8);
+  /* 
+   * INICIO: Lógica para persistir la cantidad de productos vistos "Ver más"
+   * Esto permite que al regresar de un producto, la lista mantenga su tamaño previo.
+   */
+  const [visibleCount, setVisibleCount] = useState(() => {
+    const savedCount = sessionStorage.getItem('tienda_visibleCount');
+    return savedCount ? parseInt(savedCount, 10) : 8;
+  });
+
+  /*
+   * Capturamos el conteo inicial restaurado para saber qué productos 
+   * deben aparecer INSTANTÁNEAMENTE (sin animación) porque ya fueron vistos.
+   */
+  const [initialRestoredCount] = useState(() => {
+    const savedCount = sessionStorage.getItem('tienda_visibleCount');
+    return savedCount ? parseInt(savedCount, 10) : 0;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem('tienda_visibleCount', visibleCount.toString());
+  }, [visibleCount]);
+  /* FIN: Lógica de persistencia de cantidad */
 
   const handleLoadMore = () => {
     setVisibleCount(prev => prev + 8);
   };
 
+  /* 
+   * INICIO: Lógica para persistir el ORDEN ALEATORIO de los productos
+   * Esto evita que al volver, los productos cambien de lugar.
+   */
   const shuffledProducts = useMemo(() => {
-    return [...productos].sort(() => 0.5 - Math.random());
+    if (!productos || productos.length === 0) return [];
+
+    // Intentar recuperar el orden guardado (la variable de módulo ya se encargó de limpiar si era necesario)
+    const savedOrder = sessionStorage.getItem('tienda_productOrder');
+
+    if (savedOrder) {
+      try {
+        const orderIds = JSON.parse(savedOrder);
+        // Reconstruir el array de productos en el orden guardado
+        // Filtramos por si algún producto fue eliminado de la DB pero sigue en storage
+        const ordered = orderIds
+          .map(id => productos.find(p => p.id === id))
+          .filter(Boolean);
+
+        // Si la longitud coincide (o es razonable), usamos el orden guardado
+        // Si hay una discrepancia grande (nuevos productos), podríamos decidir remezclar,
+        // pero para UX consistente, mejor mantener lo guardado y añadir lo nuevo al final si fuera necesario.
+        // Aquí simplificamos usando lo guardado si existe validamente.
+        if (ordered.length > 0) return ordered;
+      } catch (e) {
+        console.error("Error parsing saved product order", e);
+      }
+    }
+
+    // Si no hay orden guardado, generar uno nuevo aleatorio
+    const newShuffled = [...productos].sort(() => 0.5 - Math.random());
+
+    // Guardar los IDs del nuevo orden
+    const newOrderIds = newShuffled.map(p => p.id);
+    sessionStorage.setItem('tienda_productOrder', JSON.stringify(newOrderIds));
+
+    return newShuffled;
   }, [productos]);
+  /* FIN: Lógica de persistencia de orden */
 
   const currentProducts = shuffledProducts.slice(0, visibleCount);
 
@@ -267,7 +342,7 @@ export default function Tienda() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8 mb-12 min-h-[300px] content-start">
             {currentProducts.map((prod, index) => (
-              <RevealOnScroll key={prod.id} delay={index * 50}>
+              <RevealOnScroll key={prod.id} delay={index * 50} instant={index < initialRestoredCount}>
                 <ProductCard product={prod} />
               </RevealOnScroll>
             ))}
