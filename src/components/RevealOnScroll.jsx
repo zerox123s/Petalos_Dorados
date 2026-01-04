@@ -1,10 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 
-export default function RevealOnScroll({ children, delay = 0, className = "", variant = 'up' }) {
-    const [isVisible, setIsVisible] = useState(false);
+export default function RevealOnScroll({ children, delay = 0, className = "", variant = 'up', instant = false }) {
+    const [isVisible, setIsVisible] = useState(instant); // Si es instantáneo, es visible desde el inicio
     const ref = useRef(null);
 
     useEffect(() => {
+        if (instant) return; // No observar si es instantáneo
+
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -27,9 +29,11 @@ export default function RevealOnScroll({ children, delay = 0, className = "", va
                 observer.unobserve(ref.current);
             }
         };
-    }, []);
+    }, [instant]);
 
     const getVariantClasses = () => {
+        if (instant) return ''; // Sin clases de animación si es instantáneo
+
         switch (variant) {
             case 'left':
                 return isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8';
@@ -48,8 +52,8 @@ export default function RevealOnScroll({ children, delay = 0, className = "", va
     return (
         <div
             ref={ref}
-            className={`transition-all duration-1000 ease-in-out transform ${getVariantClasses()} ${className}`}
-            style={{ transitionDelay: `${delay}ms` }}
+            className={`${!instant ? 'transition-all duration-1000 ease-in-out transform' : ''} ${getVariantClasses()} ${className}`}
+            style={{ transitionDelay: instant ? '0ms' : `${delay}ms` }}
         >
             {children}
         </div>

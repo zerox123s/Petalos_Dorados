@@ -6,7 +6,7 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; -- Removed to fix restoration scroll jump */
   }
 
   /* Custom Scrollbar */
